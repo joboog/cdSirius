@@ -1,20 +1,20 @@
 {
 
-"Guid": "344500e7-4f0f-44d1-a892-4cc0b66769e0",
+"Guid": "67d42c36-8fb9-406a-9008-e4647a496aa6",
 "Category": "Post-Processing",
-"Name": "PFASicity",
-"Description": "Scores the PFAS-likeness of compounds based on Kaufmann et al. 2022",
+"Name": "Sirius",
+"Description": "Runs Sirius 6.0 to annotate compounds with formula, structure, and compound class",
 "Version": 1,
 "Publisher": null,
 "DevelopedBy": "Lee Ferguson",
-"Homepage": "https://github.com/fergusonlabduke/PFASicity",
+"Homepage": "https://github.com/fergusonlabduke/cdSirius",
 "LegalInformation": null,
 "WorkflowType": "Post-Processing",
 "License": null,
 "SupportedStudyTypes": ["General"],
 
 "ScriptProcessorArguments": {
-"ExecutableCommandLineArguments": "C:\\pythonScripts\\PFASicity\\node\\PFASicityNode.py %NODEARGS%",
+"ExecutableCommandLineArguments": "C:\\pythonScripts\\cdSirius\\node\\cdSirius.py %NODEARGS%",
 "ExecutablePath": "C:\\Python311\\python.exe",
 "ExpectResponse": true,
 "UseRFriendlyNames": true,
@@ -23,24 +23,157 @@
 
 "Parameters":[
 {
-"DataType": "Float",
-"Name": "Isotope Mass Tolerance [ppm]",
-"Default": "2.5",
-"Minimum": "0",
-"Maximum": "15"
+"DataType": "String",
+"Name": "Sirius Program Path",
+"Default": "C:\\Program Files\\sirius\\sirius.exe",
+"Category": "Sirius Program Settings",
+"Description": "Local path to Sirius executable"
+},
+{
+"DataType": "String",
+"Name": "Sirius Username",
+"Category": "Sirius Program Settings",
+"Description": "Username for Sirius web account, created here: https://portal.bright-giant.com/auth/login"
+},
+{
+"DataType": "String",
+"Name": "Sirius password",
+"Category": "Sirius Program Settings",
+"Description": "Password for Sirius web account, created here: https://portal.bright-giant.com/auth/login"
 },
 {
 "DataType": "String",
 "Name": "Checked Feature Status Handling",
 "Default": "All",
-"SelectionValues": ["Checked", "Unchecked", "All"]
+"SelectionValues": ["Checked", "Unchecked", "All"],
+"Category": "Compound Selection Settings",
+"Description": "How should checked features be handled by Sirius processing?"
+},
+{
+"DataType": "Float",
+"Name": "Peak Quality Threshold",
+"Default": "5.5",
+"Minimum": "0",
+"Maximum": "10",
+"Category": "Compound Selection Settings",
+"Description": "Minimum peak quality rating for Sirius processing"
+},
+{
+"DataType": "Float",
+"Name": "Maximum MW",
+"Default": "1500",
+"Minimum": "0",
+"Maximum": "2000",
+"Category": "Compound Selection Settings",
+"Description": "Maximum molecular weight for Sirius processing"
 },
 {
 "DataType": "String",
-"Name": "Background Feature Status Handling",
-"Default": "Exclude",
-"SelectionValues": ["Include", "Exclude", "Ignore"]
-}
+"Name": "Predict Formulas",
+"Default": "True",
+"SelectionValues": ["True", "False"],
+"Category": "Molecular Formula Prediction Settings",
+"Description": "Toggle prediction of molecular formula by Sirius"
+},
+{
+"DataType": "Int",
+"Name": "Maximum Formula Candidates",
+"Default": "10",
+"Minimum": "1",
+"Maximum": "100",
+"Category": "Molecular Formula Prediction Settings",
+"Description": "Limit for maximum number of candidate formulas predicted for each compound"
+},
+{
+"DataType": "Float",
+"Name": "MS1 Mass Accuracy [ppm]",
+"Default": "2",
+"Minimum": "0",
+"Maximum": "20",
+"Category": "Molecular Formula Prediction Settings",
+"Description": "Mass accuracy threshold for MS1 spectra"
+},
+{
+"DataType": "Float",
+"Name": "MS2 Mass Accuracy [ppm]",
+"Default": "5",
+"Minimum": "0",
+"Maximum": "20",
+"Category": "Molecular Formula Prediction Settings",
+"Description": "Mass accuracy threshold for MS2 spectra"
+},
+{
+"DataType": "String",
+"Name": "Filter by Isotope Pattern",
+"Default": "True",
+"SelectionValues": ["True", "False"],
+"Category": "Molecular Formula Prediction Settings",
+"Description": "When filtering is enabled, molecular formulas are excluded if their theoretical isotope pattern does not match the theoretical one, even if their MS/MS pattern has high score"
+},
+{
+"DataType": "String",
+"Name": "Enforce Lipid Detection Filtering",
+"Default": "True",
+"SelectionValues": ["True", "False"],
+"Category": "Molecular Formula Prediction Settings",
+"Description": "Sirius may predict that an MS/MS spectrum is a lipid spectrum. If enabled, the corresponding molecular formula will be enforced as molecular formula candidate"
+},
+{
+"DataType": "String",
+"Name": "Perform Bottom-Up Formula Search",
+"Default": "True",
+"SelectionValues": ["True", "False"],
+"Category": "Molecular Formula Prediction Settings",
+"Description": "If true, molecular formula generation via bottom up search is enabled"
+},
+{
+"DataType": "Float",
+"Name": "De novo Formula Generation Threshold",
+"Default": "400",
+"Minimum": "0",
+"Maximum": "1000",
+"Category": "Molecular Formula Prediction Settings",
+"Description": "Specifies the m/z below which de novo molecular formula generation is enabled. Set to 0 to disable de novo molecular formula generation"
+},
+{
+"DataType": "String",
+"Name": "Formula Elemental Constraints",
+"Default": "HCNOP[4]F[40]",
+"Category": "Molecular Formula Prediction Settings",
+"Description": "Enforced formula constraints are always considered.  Alphabet should be provided as a string with maximum number of given elements in brackets.  Do not add B, Cl, Br, S, or Se to this list - they are detected automatically"
+},
+{
+"DataType": "String",
+"Name": "Predict Structures",
+"Default": "True",
+"SelectionValues": ["True", "False"],
+"Category": "Structure Prediction Settings",
+"Description": "Toggle prediction of molecular structure by CSI:FingerID"
+},
+{
+"DataType": "String",
+"Name": "Predict Compound Classes",
+"Default": "True",
+"SelectionValues": ["True", "False"],
+"Category": "Compound Class Prediction Settings",
+"Description": "Toggle prediction of compound classes by ClassyFire (CANOPUS)"
+},
+{
+"DataType": "String",
+"Name": "Predict de Novo Structures",
+"Default": "True",
+"SelectionValues": ["True", "False"],
+"Category": "De Novo Structure Prediction Settings",
+"Description": "Toggle prediction of de novo structures by MSNovelist"
+},
+{
+"DataType": "Int",
+"Name": "De Novo Structure Candidates Limit",
+"Default": "128",
+"Minimum": "1",
+"Maximum": "500",
+"Category": "De Novo Structure Prediction Settings",
+"Description": "Maximum number of de novo structures to be predicted by MSNovelist"
 ]
 
 }

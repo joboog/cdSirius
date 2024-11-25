@@ -16,17 +16,16 @@ from tqdm import tqdm
 
 #cdResult = '/Users/pleeferguson/Downloads/AFFF_PRM_DDA.cdResult'
 cdResult = '/Users/pleeferguson/Documents/Projects/CleanStreak 2022/CleanStreak_extracts_FISh.cdResult'
+CheckedOnly = False
+MinPeakRating = 5.5
+MaxMass = 1500
+Limit = 500
 
-def makeFeatures(cdResult):
+def makeFeatures(cdResult, CheckedOnly, MinPeakRating, MaxMass, Limit):
     with pyeds.EDS(cdResult) as eds:
        
         # define connection path and items to keep
         path = ["Compounds", "BestHitIonInstanceItem", "MassSpectrumInfoItem"]
-        
-        CheckedOnly = False
-        MinPeakRating = 5.5
-        MaxMass = 1500
-        Limit = 500
        
         # get MS1 and MS2 from best MS2 hit and not background
         queries = {"Compounds": f"BackgroundStatus = 0 AND ExcludedBy = -1 AND MSDepth = 2 AND PeakRatingMax > {MinPeakRating}" 

@@ -99,8 +99,12 @@ def makeProjectSpace(api, projectSpaceName, projectSpacePath):
 # Creates a list of PySirius feature import objects from a 
 # list of formatted feature dicts (siriusCompounds) created
 # in formatSpectra.py
-def importCDfeatures(cdResult, ps_info, api):
-    siriusCompounds = makeFeatures(os.path.abspath(cdResult))
+def importCDfeatures(cdResult, CheckedOnly, MinPeakRating, MaxMass, Limit, ps_info, api):
+    siriusCompounds = makeFeatures(cdResult, 
+                                   CheckedOnly, 
+                                   MinPeakRating, 
+                                   MaxMass, 
+                                   Limit)
     feature_import =[]
     for feat in siriusCompounds:
         feature_import_from_dict = FeatureImport.from_dict(feat)

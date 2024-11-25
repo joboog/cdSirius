@@ -1,0 +1,46 @@
+{
+
+"Guid": "344500e7-4f0f-44d1-a892-4cc0b66769e0",
+"Category": "Post-Processing",
+"Name": "PFASicity",
+"Description": "Scores the PFAS-likeness of compounds based on Kaufmann et al. 2022",
+"Version": 1,
+"Publisher": null,
+"DevelopedBy": "Lee Ferguson",
+"Homepage": "https://github.com/fergusonlabduke/PFASicity",
+"LegalInformation": null,
+"WorkflowType": "Post-Processing",
+"License": null,
+"SupportedStudyTypes": ["General"],
+
+"ScriptProcessorArguments": {
+"ExecutableCommandLineArguments": "C:\\pythonScripts\\PFASicity\\node\\PFASicityNode.py %NODEARGS%",
+"ExecutablePath": "C:\\Python311\\python.exe",
+"ExpectResponse": true,
+"UseRFriendlyNames": true,
+"RequestedTablesAndColumns": "Compounds: Background"
+},
+
+"Parameters":[
+{
+"DataType": "Float",
+"Name": "Isotope Mass Tolerance [ppm]",
+"Default": "2.5",
+"Minimum": "0",
+"Maximum": "15"
+},
+{
+"DataType": "String",
+"Name": "Checked Feature Status Handling",
+"Default": "All",
+"SelectionValues": ["Checked", "Unchecked", "All"]
+},
+{
+"DataType": "String",
+"Name": "Background Feature Status Handling",
+"Default": "Exclude",
+"SelectionValues": ["Include", "Exclude", "Ignore"]
+}
+]
+
+}

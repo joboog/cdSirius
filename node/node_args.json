@@ -1,0 +1,33 @@
+{
+  "CurrentWorkflowID": 135,
+  "ExpectedResponsePath": "/Users/pleeferguson/Documents/Coding/CDscriptingNodes/PFASicity/exampleResults/node_response.json",
+  "ResultFilePath": "/Users/pleeferguson/Documents/Coding/CDscriptingNodes/PFASicity/exampleResults/AFFF_PRM_DDA.cdResult",
+  "NodeParameters": {
+    "Isotope Mass Tolerance [ppm]": "2.5",
+    "Checked Feature Status Handling": "All",
+    "Background Feature Status Handling": "Exclude"
+  },
+  "Version": 1,
+  "Tables": [
+    {
+      "TableName": "Compounds",
+      "DataFile": "/Users/pleeferguson/Documents/Coding/CDscriptingNodes/PFASicity/exampleResults/ConsolidatedUnknownCompoundsItem.txt",
+      "DataFormat": "CSV",
+      "Options": {},
+      "ColumnDescriptions": [
+        {
+          "ColumnName": "Compounds ID",
+          "ID": "ID",
+          "DataType": "Int",
+          "Options": {}
+        },
+        {
+          "ColumnName": "Background",
+          "ID": "",
+          "DataType": "Boolean",
+          "Options": {}
+        }
+      ]
+    }
+  ]
+}

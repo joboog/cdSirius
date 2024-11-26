@@ -3,6 +3,11 @@
 """
 Created on Mon Nov 25 14:04:19 2024
 
+Core functions for running Sirius within the Compound Discoverer environment.
+The main function accepts arguments from the CD node output and then calls
+functions within submitJob to interact with the Sirius API.  Output is parsed
+to tables, which can then be imported into the CD result file.
+
 @author: pleeferguson
 """
 

@@ -3,6 +3,10 @@
 """
 Created on Wed Oct  2 16:18:10 2024
 
+Functions for working with the PySirius API to Sirius 6.0.  These functions
+are called by the main functions within the cdSirius node.  Compound Discoverer
+results are parsed by functions from formatSpectra for input to Sirius.
+
 @author: pleeferguson
 """
 
@@ -15,44 +19,6 @@ import os
 import time
 import pandas as pd
 from formatSpectra import makeFeatures
-
-"""
-Set variables and run functions here
-"""
-# Sirius start & login variables
-siriusPath = "/Users/pleeferguson/miniconda3/bin/sirius"
-siriusUser = "lee.ferguson@duke.edu"
-siriusPW = "121#Hudson"
-
-# CD result file, scratch folder, sirius project space, and paths
-cdResult = '/Users/pleeferguson/Documents/Projects/CleanStreak 2022/CleanStreak_extracts_FISh.cdResult'
-projectSpaceName = 'test1'
-projectSpacePath = '/Users/pleeferguson/scratch/'
-
-# Sirius job parameters
-# Formula prediction params
-doSirius = True
-profile = "ORBITRAP"
-formulaCandidates = 10
-MS2accuracy_ppm = 5
-MS1accuracy_ppm = 2
-filterByIsotopes = True
-enforceLipidFormula = True
-performBottomUpSearch = True
-deNovoBelowMz = 400
-formulaConstraints = "HCNOP[4]F[40]"
-detectableElements = ['B', 'S', 'Cl', 'Se', 'Br']
-formulaSearchDBs = None
-timeOuts = {"numberOfSecondsPerDecomposition": 0,
-            "numberOfSecondsPerInstance": 0}
-# CSI-FingerID params
-doCSIFID = True
-structureDBs = ['DSSTOX', 'PUBCHEM']
-# ClassyFire params
-doClassyFire = True
-# msNovelist params
-doMsNovelist = False
-msNovelistCandidates = 128
 
 
 
@@ -70,8 +36,8 @@ def startSirius(siriusPath, siriusUser, siriusPW):
    time.sleep(10)
 
    # Set login information
-   loginCreds = {'username': 'lee.ferguson@duke.edu',
-                 'password': '121#Hudson',
+   loginCreds = {'username': siriusUser,
+                 'password': siriusPW,
                  'refreshToken': None}
    loginCreds = PySirius.AccountCredentials().from_dict(loginCreds)
    # Check if user is logged-in
@@ -83,6 +49,7 @@ def startSirius(siriusPath, siriusUser, siriusPW):
                                               loginCreds, 
                                               fail_when_logged_in=False, 
                                               include_subs=False)
+           print(f"Sirius user {api_response.username} logged in")
        except Exception as e:
            print("Exception when calling LoginAndAccountApi->login: %s\n" % e) 
    return(api)

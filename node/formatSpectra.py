@@ -14,12 +14,6 @@ import pyeds
 import statistics
 from tqdm import tqdm
 
-#cdResult = '/Users/pleeferguson/Downloads/AFFF_PRM_DDA.cdResult'
-cdResult = '/Users/pleeferguson/Documents/Projects/CleanStreak 2022/CleanStreak_extracts_FISh.cdResult'
-CheckedOnly = False
-MinPeakRating = 5.5
-MaxMass = 1500
-Limit = 500
 
 def makeFeatures(cdResult, CheckedOnly, MinPeakRating, MaxMass, Limit):
     with pyeds.EDS(cdResult) as eds:

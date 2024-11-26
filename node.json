@@ -31,6 +31,14 @@
 },
 {
 "DataType": "String",
+"Name": "Save Sirius Result",
+"Default": "False",
+"SelectionValues": ["True", "False"],
+"Category": "Sirius Program Settings",
+"Description": "Save Sirius project space output for use with Sirius GUI.  If True, project space file is saved in the same directory as the corresponding cdResult file"
+},
+{
+"DataType": "String",
 "Name": "Sirius Username",
 "Category": "Sirius Program Settings",
 "Description": "Username for Sirius web account, created here: https://portal.bright-giant.com/auth/login"
@@ -152,6 +160,14 @@
 },
 {
 "DataType": "String",
+"Name": "PubChem as Fallback",
+"Default": "True",
+"SelectionValues": ["True", "False"],
+"Category": "Structure Prediction Settings",
+"Description": "Use PubChem as a fallback database if no matches found in primary databases. If False, then PubChem will be used as a primary database"
+},
+{
+"DataType": "String",
 "Name": "Predict Compound Classes",
 "Default": "True",
 "SelectionValues": ["True", "False"],
@@ -161,7 +177,7 @@
 {
 "DataType": "String",
 "Name": "Predict de Novo Structures",
-"Default": "True",
+"Default": "False",
 "SelectionValues": ["True", "False"],
 "Category": "De Novo Structure Prediction Settings",
 "Description": "Toggle prediction of de novo structures by MSNovelist"

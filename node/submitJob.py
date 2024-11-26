@@ -65,7 +65,7 @@ def startSirius(siriusPath, siriusUser, siriusPW):
    api = sdk.start_sirius(sirius_path=os.path.abspath(siriusPath), 
                           port=8080,
                           headless=True)
-   api = sdk.connect("http://localhost:8080")
+   #api = sdk.connect("http://localhost:8080")
 
    time.sleep(10)
 
@@ -120,8 +120,8 @@ def configureJob(doSirius, profile, formulaCandidates, MS2accuracy_ppm,
                  MS1accuracy_ppm, filterByIsotopes, enforceLipidFormula,
                  performBottomUpSearch, deNovoBelowMz, formulaConstraints,
                  detectableElements, formulaSearchDBs, timeOuts,
-                 doCSIFID, structureDBs, doClassyFire, doMsNovelist,
-                 msNovelistCandidates, api):
+                 doCSIFID, structureDBs, PubChemFallback, doClassyFire, 
+                 doMsNovelist, msNovelistCandidates, api):
     # Load default job submission template
     jobSub = api.jobs().get_default_job_config()
     # Set parameters for job
@@ -140,6 +140,10 @@ def configureJob(doSirius, profile, formulaCandidates, MS2accuracy_ppm,
     jobSub.fingerprint_prediction_params.enabled = doCSIFID if doSirius else False
     jobSub.structure_db_search_params.enabled = doCSIFID if doSirius else False
     jobSub.structure_db_search_params.structure_search_dbs = structureDBs
+    if PubChemFallback:
+        jobSub.structure_db_search_params.expansive_search_confidence_mode=api.models().ConfidenceMode.APPROXIMATE
+    else:
+        jobSub.structure_db_search_params.expansive_search_confidence_mode=api.models().ConfidenceMode.OFF
     jobSub.canopus_params.enabled = doClassyFire if jobSub.structure_db_search_params.enabled else False
     jobSub.ms_novelist_params.enabled = doMsNovelist if jobSub.structure_db_search_params.enabled else False
     jobSub.config_map = {'MS1MassDeviation.allowedMassDeviation': 
@@ -150,10 +154,13 @@ def configureJob(doSirius, profile, formulaCandidates, MS2accuracy_ppm,
 def executeSirius(api, ps_info, jobSub):
     # Submit job
     job = api.jobs().start_job(project_id=ps_info.project_id, job_submission=jobSub)
+    command = api.jobs().get_job(project_id=ps_info.project_id, job_id=job.id, opt_fields=["command"])
+    print("Sirius job started with configuration: "+command.command)
     while True:
         if api.jobs().get_job(ps_info.project_id, job.id).progress.state != 'DONE':
             time.sleep(10)
         else:
+            print("Sirius job completed successfully")
             break
 
 # Get Sirius results for import to CD
@@ -179,7 +186,7 @@ def retrieveSiriusResults(api, ps_info, jobSub):
         if jobSub.formula_id_params.enabled:
             formulas = api.features().get_formula_candidates(ps_info.project_id, 
                                                              featId,
-                                                              opt_fields=["statistics","compoundClasses"])
+                                                             opt_fields=["statistics","compoundClasses"])
             formulas_dicts = [FormulaCandidate.to_dict(formResult) for 
                               formResult in formulas]
             for cmpdClass in formulas_dicts:
@@ -193,7 +200,8 @@ def retrieveSiriusResults(api, ps_info, jobSub):
             
             formula_df = pd.DataFrame.from_dict(formulas_dicts)
             if not formula_df.empty:
-                formula_df = formula_df.drop('compoundClasses', axis = 1)
+                formula_df['ppmError'] = pd.DataFrame(formula_df['medianMassDeviation'].tolist())['ppm']
+                formula_df.drop(formula_df.columns[10:19], axis = 1, inplace = True)
                 formula_df['CDcid'] = CDcid
                 formulaResults.append(formula_df)
                 
@@ -206,6 +214,19 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                                 structResult in structures]
             structure_df = pd.DataFrame.from_dict(structures_dicts)
             if not structure_df.empty:
+                dbLinks = structure_df['dbLinks']
+                dbLinkList = []
+                for dbLink in dbLinks:
+                    PubChemID = next((item for item in dbLink if item["name"] == "PUBCHEM"), None)
+                    if PubChemID:
+                        PubChemID = PubChemID['id']
+                    DSSToxID = next((item for item in dbLink if item["name"] == "DSSTox"), None)
+                    if DSSToxID:
+                        DSSToxID = DSSToxID['id']
+                    dbLinkList.append({"PubChemID": PubChemID, "DSSToxID": DSSToxID})
+                dbLink_df = pd.DataFrame(dbLinkList)
+                structure_df = pd.concat([structure_df, dbLink_df], axis = 1)
+                structure_df.drop(['dbLinks','spectralLibraryMatches'], axis = 1, inplace = True)
                 structure_df['CDcid'] = CDcid
                 structureResults.append(structure_df)
                 

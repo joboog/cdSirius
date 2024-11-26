@@ -6,7 +6,6 @@ Created on Mon Nov 25 14:04:19 2024
 @author: pleeferguson
 """
 
-import pyeds
 import sys
 import os
 import json
@@ -15,6 +14,7 @@ from CdScriptingNodeHelper import ScriptingResponse
 from submitJob import startSirius,makeProjectSpace,importCDfeatures,configureJob,executeSirius,retrieveSiriusResults,shutdownSirius
 import string
 import random
+import shutil
 
 def print_error(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -57,6 +57,7 @@ def main():
     siriusPath = str(parameters['Sirius Program Path'])
     siriusUser = str(parameters['Sirius Username'])
     siriusPW = str(parameters['Sirius Password'])
+    saveSirius = parameters['Save Sirius Result'] == "True"
 
     # Parse CD result file path, scratch folder path, generate Sirius project space name
     cdResult = cdResult_path
@@ -68,15 +69,15 @@ def main():
     CheckedOnly = parameters['Checked Feature Status Handling'] == "Checked"
     MinPeakRating = float(parameters['Peak Quality Threshold'])
     MaxMass = float(parameters['Maximum MW'])
-    Limit = 2000 # Arbitrary limit switch for debugging
+    Limit = 500 # Arbitrary limit switch for debugging
 
     # Sirius job parameters
     # Formula prediction params
     doSirius = parameters['Predict Formulas'] == "True"
     profile = "ORBITRAP"
     formulaCandidates = int(parameters['Maximum Formula Candidates'])
-    MS2accuracy_ppm = float(parameters['MS1 Mass Accuracy [ppm]'])
-    MS1accuracy_ppm = float(parameters['MS2 Mass Accuracy [ppm]'])
+    MS1accuracy_ppm = float(parameters['MS1 Mass Accuracy [ppm]'])
+    MS2accuracy_ppm = float(parameters['MS2 Mass Accuracy [ppm]'])
     filterByIsotopes = parameters['Filter by Isotope Pattern'] == "True"
     enforceLipidFormula = parameters['Enforce Lipid Detection Filtering'] == "True"
     performBottomUpSearch = parameters['Perform Bottom-Up Formula Search'] == "True"
@@ -89,6 +90,7 @@ def main():
     # CSI-FingerID params
     doCSIFID = parameters['Predict Structures']== "True"
     structureDBs = ['DSSTOX', 'PUBCHEM']
+    PubChemFallback = parameters['PubChem as Fallback'] == "True"
     # ClassyFire params
     doClassyFire = parameters['Predict Compound Classes']== "True"
     # msNovelist params
@@ -146,8 +148,8 @@ def main():
                          MS1accuracy_ppm, filterByIsotopes, enforceLipidFormula,
                          performBottomUpSearch, deNovoBelowMz, formulaConstraints,
                          detectableElements, formulaSearchDBs, timeOuts,
-                         doCSIFID, structureDBs, doClassyFire, doMsNovelist,
-                         msNovelistCandidates, api)
+                         doCSIFID, structureDBs, PubChemFallback, doClassyFire, 
+                         doMsNovelist, msNovelistCandidates, api)
         
     except Exception as e:
         print_error('Could not configure Sirius job input')
@@ -171,6 +173,12 @@ def main():
         print_error('Could not retrieve Sirius processing results')
         print_error(e)
         exit(1)
+        
+    # Save Sirius project space to disk if required
+    if saveSirius:
+        projectSpaceTemp = os.path.join(projectSpacePath, projectSpaceName)+".sirius"
+        projectSpacePerm = os.path.splitext(cdResult)[0]+".sirius"
+        shutil.copyfile(projectSpaceTemp, projectSpacePerm)
         
     # Shut down Sirius API
     shutdownSirius()

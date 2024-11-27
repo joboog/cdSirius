@@ -159,9 +159,14 @@ def retrieveSiriusResults(api, ps_info, jobSub):
             for cmpdClass in formulas_dicts:
                 if jobSub.canopus_params.enabled and cmpdClass['compoundClasses'] is not None:
                     cmpdClass_df = pd.DataFrame.from_dict(cmpdClass['compoundClasses']['classyFireLineage'])
-                    cmpdClass_df = cmpdClass_df.drop(columns=['type','index'])
-                    cmpdClass_df['formulaId'] = cmpdClass['formulaId']
-                    cmpdClass_df['CDcid'] = CDcid
+                    cmpdClass_df.drop(columns=['type','index'], inplace = True)
+                    cmpdClass_df['SiriusFormulas ID'] = cmpdClass['formulaId']
+                    cmpdClass_df['Compounds ID'] = CDcid
+                    cmpdClass_df.rename(columns={'id': 'Class ID',
+                                                 'level': 'Classification Level',
+                                                 'name': 'Classification Name',
+                                                 'description': 'Description',
+                                                 'probability': 'Probability'}, inplace = True)
                     cmpdClassResults.append(cmpdClass_df)
                     
             
@@ -169,7 +174,18 @@ def retrieveSiriusResults(api, ps_info, jobSub):
             if not formula_df.empty:
                 formula_df['ppmError'] = pd.DataFrame(formula_df['medianMassDeviation'].tolist())['ppm']
                 formula_df.drop(formula_df.columns[10:19], axis = 1, inplace = True)
-                formula_df['CDcid'] = CDcid
+                formula_df['Compounds ID'] = CDcid
+                formula_df.rename(columns={'formulaId': 'ID',
+                                           'molecularFormula': 'Formula',
+                                           'adduct': 'Adduct',
+                                           'rank': 'Rank',
+                                           'siriusScore': 'Sirius Score',
+                                           'isotopeScore': 'Isotope Score',
+                                           'treeScore': 'Tree Score',
+                                           'numOfExplainedPeaks': '# Explained Peaks',
+                                           'numOfExplainablePeaks': '# Explainable Peaks',
+                                           'totalExplainedIntensity': 'Explained Intensity',
+                                           'ppmError': 'ΔMass [ppm]'}, inplace = True)
                 formulaResults.append(formula_df)
                 
         # Get database structure predictions if available
@@ -190,12 +206,24 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                     DSSToxID = next((item for item in dbLink if item["name"] == "DSSTox"), None)
                     if DSSToxID:
                         DSSToxID = DSSToxID['id']
-                    dbLinkList.append({"PubChemID": PubChemID, "DSSToxID": DSSToxID})
+                    dbLinkList.append({"PubChem ID": PubChemID, "DSSTox ID": DSSToxID})
                 dbLink_df = pd.DataFrame(dbLinkList)
                 structure_df = pd.concat([structure_df, dbLink_df], axis = 1)
                 structure_df.drop(['dbLinks','spectralLibraryMatches'], axis = 1, inplace = True)
-                structure_df['CDcid'] = CDcid
+                structure_df['Compounds ID'] = CDcid
+                structure_df.rename(columns={'formulaId': 'SiriusFormulas ID',
+                                             'inchikey': 'InChIKey',
+                                             'smiles': 'SMILES',
+                                             'structureName': 'Name',
+                                             'xlogP': 'Log Kow',
+                                             'rank': 'Rank',
+                                             'csiScore': 'CSI Score',
+                                             'tanimotoSimilarity': 'Tanimoto Similarity',
+                                             'mcesDistToTopHit': 'MCES Distance to Top Hit',
+                                             'molecularFormula': 'Formula',
+                                             'adduct': 'Adduct'}, inplace = True)
                 structureResults.append(structure_df)
+            
                 
         # Get de novo structure predictions if available
         if jobSub.ms_novelist_params.enabled:
@@ -206,22 +234,26 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                                 deNovoResult in deNovoStructures]
             deNovoStructure_df = pd.DataFrame.from_dict(deNovoStructures_dicts)
             if not deNovoStructure_df.empty:
-                deNovoStructure_df['CDcid'] = CDcid
+                deNovoStructure_df['Compounds ID'] = CDcid
+                deNovoStructure_df.rename(columns={'formulaId': 'SiriusFormulas ID'}, inplace = True)
                 deNovoStructureResults.append(deNovoStructure_df)
     
     results_dict = dict()
     if jobSub.formula_id_params.enabled:
         siriusFormulas = pd.concat(formulaResults, ignore_index=True)
-        results_dict['Formulas'] = siriusFormulas
+        results_dict['SiriusFormulas'] = siriusFormulas
     if jobSub.structure_db_search_params.enabled: 
         siriusStructures = pd.concat(structureResults, ignore_index=True)
-        results_dict['Structures'] = siriusStructures
+        siriusStructures['ID'] = siriusStructures.index+1
+        results_dict['SiriusStructures'] = siriusStructures
     if jobSub.canopus_params.enabled:
         siriusCmpdClasses = pd.concat(cmpdClassResults, ignore_index = True)
-        results_dict['Classes'] = siriusCmpdClasses
+        siriusCmpdClasses['ID'] = siriusCmpdClasses.index+1
+        results_dict['SiriusClasses'] = siriusCmpdClasses
     if jobSub.ms_novelist_params.enabled:
         siriusDeNovoStructures = pd.concat(deNovoStructureResults, ignore_index=True)
-        results_dict['deNovoStructures'] = siriusDeNovoStructures    
+        siriusDeNovoStructures['ID'] = siriusDeNovoStructures.index+1
+        results_dict['SiriusDeNovoStructures'] = siriusDeNovoStructures    
     return(results_dict)
 
 

@@ -233,7 +233,18 @@ def main():
         response.set_column_option('SiriusFormulas', '# Explainable Peaks', 'RelativePosition', '80')
         response.add_column('SiriusFormulas', 'Explained Intensity', 'Float')
         response.set_column_option('SiriusFormulas', 'Explained Intensity', 'RelativePosition', '90')
-        response.set_column_option('SiriusFormulas', 'Explained Intensity', 'FormatString', 'F2')        
+        response.set_column_option('SiriusFormulas', 'Explained Intensity', 'FormatString', 'F2') 
+        # Formula to Compounds connection table
+        formulas_compounds = formulas[['ID', 'Compounds ID']]
+        writeTable(formulas_compounds, 'SiriusFormulas-Compounds', projectSpacePath)
+        response.add_table('SiriusFormulas-Compounds', 
+                           os.path.join(projectSpacePath, 'SiriusFormulas-Compounds.txt'),
+                           data_format='CSVConnectionTable')
+        response.set_table_option('SiriusFormulas-Compounds', 'FirstTable', 'SiriusFormulas')
+        response.set_table_option('SiriusFormulas-Compounds', 'SecondTable', 'Compounds')
+        response.add_column('SiriusFormulas-Compounds', 'ID', 'Long', 'ID')
+        response.add_column('SiriusFormulas-Compounds', 'Compounds ID', 'Int', 'ID')
+        
         if doCSIFID:
             # Structures table
             structures = results_dict['SiriusStructures']
@@ -263,6 +274,26 @@ def main():
             response.set_column_option('SiriusStructures', 'PubChem ID', 'RelativePosition', '80')
             response.add_column('SiriusStructures', 'DSSTox ID', 'String')
             response.set_column_option('SiriusStructures', 'DSSTox ID', 'RelativePosition', '90')
+            # Structures to Compounds connection table
+            structures_compounds = structures[['ID', 'Compounds ID']]
+            writeTable(structures_compounds, 'SiriusStructures-Compounds', projectSpacePath)
+            response.add_table('SiriusStructures-Compounds', 
+                               os.path.join(projectSpacePath, 'SiriusStructures-Compounds.txt'),
+                               data_format='CSVConnectionTable')
+            response.set_table_option('SiriusStructures-Compounds', 'FirstTable', 'SiriusStructures')
+            response.set_table_option('SiriusStructures-Compounds', 'SecondTable', 'Compounds')
+            response.add_column('SiriusStructures-Compounds', 'ID', 'Int', 'ID')
+            response.add_column('SiriusStructures-Compounds', 'Compounds ID', 'Int', 'ID')
+            # Structures to SiriusFormulas connection table
+            structures_formulas = structures[['ID', 'SiriusFormulas ID']]
+            writeTable(structures_formulas, 'SiriusStructures-SiriusFormulas', projectSpacePath)
+            response.add_table('SiriusStructures-SiriusFormulas', 
+                               os.path.join(projectSpacePath, 'SiriusStructures-SiriusFormulas.txt'),
+                               data_format='CSVConnectionTable')
+            response.set_table_option('SiriusStructures-SiriusFormulas', 'FirstTable', 'SiriusStructures')
+            response.set_table_option('SiriusStructures-SiriusFormulas', 'SecondTable', 'SiriusFormulas')
+            response.add_column('SiriusStructures-SiriusFormulas', 'ID', 'Int', 'ID')
+            response.add_column('SiriusStructures-SiriusFormulas', 'SiriusFormulas ID', 'Long', 'ID')
             
             
         if doClassyFire:
@@ -282,6 +313,26 @@ def main():
             response.add_column('SiriusClasses', 'Probability', 'Float')
             response.set_column_option('SiriusClasses', 'Probability', 'RelativePosition', '50')
             response.set_column_option('SiriusClasses', 'Probability', 'FormatString', 'F3')
+            # Classes to Compounds connection table
+            classes_compounds = classes[['ID', 'Compounds ID']]
+            writeTable(classes_compounds, 'SiriusClasses-Compounds', projectSpacePath)
+            response.add_table('SiriusClasses-Compounds', 
+                               os.path.join(projectSpacePath, 'SiriusClasses-Compounds.txt'),
+                               data_format='CSVConnectionTable')
+            response.set_table_option('SiriusClasses-Compounds', 'FirstTable', 'SiriusClasses')
+            response.set_table_option('SiriusClasses-Compounds', 'SecondTable', 'Compounds')
+            response.add_column('SiriusClasses-Compounds', 'ID', 'Int', 'ID')
+            response.add_column('SiriusClasses-Compounds', 'Compounds ID', 'Int', 'ID')
+            # Structures to SiriusFormulas connection table
+            classes_formulas = classes[['ID', 'SiriusFormulas ID']]
+            writeTable(classes_formulas, 'SiriusClasses-SiriusFormulas', projectSpacePath)
+            response.add_table('SiriusClasses-SiriusFormulas', 
+                               os.path.join(projectSpacePath, 'SiriusClasses-SiriusFormulas.txt'),
+                               data_format='CSVConnectionTable')
+            response.set_table_option('SiriusClasses-SiriusFormulas', 'FirstTable', 'SiriusClasses')
+            response.set_table_option('SiriusClasses-SiriusFormulas', 'SecondTable', 'SiriusFormulas')
+            response.add_column('SiriusClasses-SiriusFormulas', 'ID', 'Int', 'ID')
+            response.add_column('SiriusClasses-SiriusFormulas', 'SiriusFormulas ID', 'Long', 'ID')
             
         if doMsNovelist:
             # deNovo Structures table
@@ -298,3 +349,8 @@ def main():
 
 if __name__== "__main__" :
     main()
+    
+    
+    
+    
+    

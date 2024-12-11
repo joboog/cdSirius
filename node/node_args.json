@@ -29,7 +29,7 @@
   "Tables": [
     {
       "TableName": "Compounds",
-      "DataFile": "/Users/pleeferguson/Documents/Coding/CDscriptingNodes/PFASicity/exampleResults/ConsolidatedUnknownCompoundsItem.txt",
+      "DataFile": "/Users/pleeferguson/scratch/ConsolidatedUnknownCompoundsItem.txt",
       "DataFormat": "CSV",
       "Options": {},
       "ColumnDescriptions": [

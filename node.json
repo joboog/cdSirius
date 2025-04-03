@@ -47,7 +47,7 @@
 },
 {
 "DataType": "String",
-"Name": "Sirius password",
+"Name": "Sirius Password",
 "Category": "Sirius Program Settings",
 "Description": "Password for Sirius web account, created here: https://portal.bright-giant.com/auth/login"
 },

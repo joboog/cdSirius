@@ -192,6 +192,7 @@
 "Maximum": "500",
 "Category": "De Novo Structure Prediction Settings",
 "Description": "Maximum number of de novo structures to be predicted by MSNovelist"
+}
 ]
 
 }

@@ -22,7 +22,7 @@
     "Predict Structures": "True",
     "PubChem as Fallback": "True",
     "Predict Compound Classes": "True",
-    "Predict de Novo Structures": "False",
+    "Predict de Novo Structures": "True",
     "De Novo Structure Candidates Limit": "128"
   },
   "Version": 1,

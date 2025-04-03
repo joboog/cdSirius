@@ -10,6 +10,8 @@
 "Homepage": "https://github.com/fergusonlabduke/cdSirius",
 "LegalInformation": null,
 "WorkflowType": "Post-Processing",
+"ImageLarge": "IMG_32x32.png",
+"ImageSmall": "IMG_16x16.png",
 "License": null,
 "SupportedStudyTypes": ["General"],
 

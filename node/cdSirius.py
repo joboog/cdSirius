@@ -202,144 +202,187 @@ def main():
     shutdownSirius()
          
     # Export Sirius result data to tables and assemble node_response JSON
-    if doSirius:
-        response = ScriptingResponse()
-        # Formula table
-        formulas = results_dict['SiriusFormulas']
-        writeTable(formulas, "SiriusFormulas", projectSpacePath)
-        response.add_table('SiriusFormulas', os.path.join(projectSpacePath, 'SiriusFormulas.txt'))
-        response.add_column('SiriusFormulas', 'ID', 'Int', 'ID')
-        response.add_column('SiriusFormulas', 'Formula', 'String')
-        response.set_column_option('SiriusFormulas', 'Formula', 'RelativePosition', '10')
-        response.add_column('SiriusFormulas', 'Adduct', 'String')
-        response.set_column_option('SiriusFormulas', 'Adduct', 'RelativePosition', '20')
-        response.add_column('SiriusFormulas', 'ΔMass [ppm]', 'Float')
-        response.set_column_option('SiriusFormulas', 'ΔMass [ppm]', 'RelativePosition', '21')
-        response.set_column_option('SiriusFormulas', 'ΔMass [ppm]', 'FormatString', 'F2')
-        response.add_column('SiriusFormulas', 'Rank', 'Int')
-        response.set_column_option('SiriusFormulas', 'Rank', 'RelativePosition', '30')
-        response.add_column('SiriusFormulas', 'Sirius Score', 'Float')
-        response.set_column_option('SiriusFormulas', 'Sirius Score', 'RelativePosition', '40')
-        response.set_column_option('SiriusFormulas', 'Sirius Score', 'FormatString', 'F3')
-        response.add_column('SiriusFormulas', 'Isotope Score', 'Float')
-        response.set_column_option('SiriusFormulas', 'Isotope Score', 'RelativePosition', '50')
-        response.set_column_option('SiriusFormulas', 'Isotope Score', 'FormatString', 'F3')
-        response.add_column('SiriusFormulas', 'Tree Score', 'Float')
-        response.set_column_option('SiriusFormulas', 'Tree Score', 'RelativePosition', '60')
-        response.set_column_option('SiriusFormulas', 'Tree Score', 'FormatString', 'F3')
-        response.add_column('SiriusFormulas', '# Explained Peaks', 'Int')
-        response.set_column_option('SiriusFormulas', '# Explained Peaks', 'RelativePosition', '70')
-        response.add_column('SiriusFormulas', '# Explainable Peaks', 'Int')
-        response.set_column_option('SiriusFormulas', '# Explainable Peaks', 'RelativePosition', '80')
-        response.add_column('SiriusFormulas', 'Explained Intensity', 'Float')
-        response.set_column_option('SiriusFormulas', 'Explained Intensity', 'RelativePosition', '90')
-        response.set_column_option('SiriusFormulas', 'Explained Intensity', 'FormatString', 'F2') 
-        # Formula to Compounds connection table
-        formulas_compounds = formulas[['ID', 'Compounds ID']]
-        writeTable(formulas_compounds, 'SiriusFormulas-Compounds', projectSpacePath)
-        response.add_table('SiriusFormulas-Compounds', 
-                           os.path.join(projectSpacePath, 'SiriusFormulas-Compounds.txt'),
-                           data_format='CSVConnectionTable')
-        response.set_table_option('SiriusFormulas-Compounds', 'FirstTable', 'SiriusFormulas')
-        response.set_table_option('SiriusFormulas-Compounds', 'SecondTable', 'Compounds')
-        response.add_column('SiriusFormulas-Compounds', 'ID', 'Long', 'ID')
-        response.add_column('SiriusFormulas-Compounds', 'Compounds ID', 'Int', 'ID')
-        
-        if doCSIFID:
-            # Structures table
-            structures = results_dict['SiriusStructures']
-            structures['Structure'] = [Chem.MolToMolBlock(Chem.rdmolfiles.MolFromSmiles(m)) for 
-                                       m in structures['SMILES']]
-            writeTable(structures, "SiriusStructures", projectSpacePath)
-            response.add_table('SiriusStructures', os.path.join(projectSpacePath, 'SiriusStructures.txt'))
-            response.add_column('SiriusStructures', 'ID', 'Int', 'ID')
-            response.add_column('SiriusStructures', 'Structure', 'String')
-            response.set_column_option('SiriusStructures', 'Structure', 'RelativePosition', '10')
-            response.set_column_option('SiriusStructures', 'Structure', 'SpecialDisplay', '9ACA6BD7-EB95-4F7D-A293-F18EC06D10CF')
-            response.add_column('SiriusStructures', 'Name', 'String')
-            response.set_column_option('SiriusStructures', 'Name', 'RelativePosition', '20')
-            response.add_column('SiriusStructures', 'Formula', 'String')
-            response.set_column_option('SiriusStructures', 'Formula', 'RelativePosition', '30')
-            response.add_column('SiriusStructures', 'Adduct', 'String')
-            response.set_column_option('SiriusStructures', 'Adduct', 'RelativePosition', '40')
-            response.add_column('SiriusStructures', 'Rank', 'Int')
-            response.set_column_option('SiriusStructures', 'Rank', 'RelativePosition', '50')
-            response.add_column('SiriusStructures', 'CSI Score', 'Float')
-            response.set_column_option('SiriusStructures', 'CSI Score', 'RelativePosition', '60')
-            response.set_column_option('SiriusStructures', 'CSI Score', 'FormatString', 'F2')
-            response.add_column('SiriusStructures', 'Tanimoto Similarity', 'Float')
-            response.set_column_option('SiriusStructures', 'Tanimoto Similarity', 'RelativePosition', '70')
-            response.set_column_option('SiriusStructures', 'Tanimoto Similarity', 'FormatString', 'F3')
-            response.add_column('SiriusStructures', 'PubChem ID', 'Int')
-            response.set_column_option('SiriusStructures', 'PubChem ID', 'RelativePosition', '80')
-            response.add_column('SiriusStructures', 'DSSTox ID', 'String')
-            response.set_column_option('SiriusStructures', 'DSSTox ID', 'RelativePosition', '90')
-            # Structures to Compounds connection table
-            structures_compounds = structures[['ID', 'Compounds ID']]
-            writeTable(structures_compounds, 'SiriusStructures-Compounds', projectSpacePath)
-            response.add_table('SiriusStructures-Compounds', 
-                               os.path.join(projectSpacePath, 'SiriusStructures-Compounds.txt'),
-                               data_format='CSVConnectionTable')
-            response.set_table_option('SiriusStructures-Compounds', 'FirstTable', 'SiriusStructures')
-            response.set_table_option('SiriusStructures-Compounds', 'SecondTable', 'Compounds')
-            response.add_column('SiriusStructures-Compounds', 'ID', 'Int', 'ID')
-            response.add_column('SiriusStructures-Compounds', 'Compounds ID', 'Int', 'ID')
-            # Structures to SiriusFormulas connection table
-            structures_formulas = structures[['ID', 'SiriusFormulas ID']]
-            writeTable(structures_formulas, 'SiriusStructures-SiriusFormulas', projectSpacePath)
-            response.add_table('SiriusStructures-SiriusFormulas', 
-                               os.path.join(projectSpacePath, 'SiriusStructures-SiriusFormulas.txt'),
-                               data_format='CSVConnectionTable')
-            response.set_table_option('SiriusStructures-SiriusFormulas', 'FirstTable', 'SiriusStructures')
-            response.set_table_option('SiriusStructures-SiriusFormulas', 'SecondTable', 'SiriusFormulas')
-            response.add_column('SiriusStructures-SiriusFormulas', 'ID', 'Int', 'ID')
-            response.add_column('SiriusStructures-SiriusFormulas', 'SiriusFormulas ID', 'Long', 'ID')
-            
-            
-        if doClassyFire:
-            # Classes table
-            classes = results_dict['SiriusClasses']
-            writeTable(classes, "SiriusClasses", projectSpacePath)
-            response.add_table('SiriusClasses', os.path.join(projectSpacePath, 'SiriusClasses.txt'))
-            response.add_column('SiriusClasses', 'ID', 'Int', 'ID')
-            response.add_column('SiriusClasses', 'Classification Level', 'String')
-            response.set_column_option('SiriusClasses', 'Classification Level', 'RelativePosition', '10')
-            response.add_column('SiriusClasses', 'Classification Name', 'String')
-            response.set_column_option('SiriusClasses', 'Classification Name', 'RelativePosition', '20')
-            response.add_column('SiriusClasses', 'Description', 'String')
-            response.set_column_option('SiriusClasses', 'Description', 'RelativePosition', '30')
-            response.add_column('SiriusClasses', 'Class ID', 'Int')
-            response.set_column_option('SiriusClasses', 'Class ID', 'RelativePosition', '40')
-            response.add_column('SiriusClasses', 'Probability', 'Float')
-            response.set_column_option('SiriusClasses', 'Probability', 'RelativePosition', '50')
-            response.set_column_option('SiriusClasses', 'Probability', 'FormatString', 'F3')
-            # Classes to Compounds connection table
-            classes_compounds = classes[['ID', 'Compounds ID']]
-            writeTable(classes_compounds, 'SiriusClasses-Compounds', projectSpacePath)
-            response.add_table('SiriusClasses-Compounds', 
-                               os.path.join(projectSpacePath, 'SiriusClasses-Compounds.txt'),
-                               data_format='CSVConnectionTable')
-            response.set_table_option('SiriusClasses-Compounds', 'FirstTable', 'SiriusClasses')
-            response.set_table_option('SiriusClasses-Compounds', 'SecondTable', 'Compounds')
-            response.add_column('SiriusClasses-Compounds', 'ID', 'Int', 'ID')
-            response.add_column('SiriusClasses-Compounds', 'Compounds ID', 'Int', 'ID')
-            # Structures to SiriusFormulas connection table
-            classes_formulas = classes[['ID', 'SiriusFormulas ID']]
-            writeTable(classes_formulas, 'SiriusClasses-SiriusFormulas', projectSpacePath)
-            response.add_table('SiriusClasses-SiriusFormulas', 
-                               os.path.join(projectSpacePath, 'SiriusClasses-SiriusFormulas.txt'),
-                               data_format='CSVConnectionTable')
-            response.set_table_option('SiriusClasses-SiriusFormulas', 'FirstTable', 'SiriusClasses')
-            response.set_table_option('SiriusClasses-SiriusFormulas', 'SecondTable', 'SiriusFormulas')
-            response.add_column('SiriusClasses-SiriusFormulas', 'ID', 'Int', 'ID')
-            response.add_column('SiriusClasses-SiriusFormulas', 'SiriusFormulas ID', 'Long', 'ID')
-            
-        if doMsNovelist:
-            # deNovo Structures table
-            deNovoStructures = results_dict['SiriusDeNovoStructures']
-            writeTable(deNovoStructures, "SiriusDeNovoStructures", projectSpacePath)
+    response = ScriptingResponse()
+    # Formula table
+    formulas = results_dict['SiriusFormulas']
+    writeTable(formulas, "SiriusFormulas", projectSpacePath)
+    response.add_table('SiriusFormulas', os.path.join(projectSpacePath, 'SiriusFormulas.txt'))
+    response.add_column('SiriusFormulas', 'ID', 'Int', 'ID')
+    response.add_column('SiriusFormulas', 'Formula', 'String')
+    response.set_column_option('SiriusFormulas', 'Formula', 'RelativePosition', '10')
+    response.add_column('SiriusFormulas', 'Adduct', 'String')
+    response.set_column_option('SiriusFormulas', 'Adduct', 'RelativePosition', '20')
+    response.add_column('SiriusFormulas', 'ΔMass [ppm]', 'Float')
+    response.set_column_option('SiriusFormulas', 'ΔMass [ppm]', 'RelativePosition', '21')
+    response.set_column_option('SiriusFormulas', 'ΔMass [ppm]', 'FormatString', 'F2')
+    response.add_column('SiriusFormulas', 'Rank', 'Int')
+    response.set_column_option('SiriusFormulas', 'Rank', 'RelativePosition', '30')
+    response.add_column('SiriusFormulas', 'Sirius Score', 'Float')
+    response.set_column_option('SiriusFormulas', 'Sirius Score', 'RelativePosition', '40')
+    response.set_column_option('SiriusFormulas', 'Sirius Score', 'FormatString', 'F3')
+    response.add_column('SiriusFormulas', 'Isotope Score', 'Float')
+    response.set_column_option('SiriusFormulas', 'Isotope Score', 'RelativePosition', '50')
+    response.set_column_option('SiriusFormulas', 'Isotope Score', 'FormatString', 'F3')
+    response.add_column('SiriusFormulas', 'Tree Score', 'Float')
+    response.set_column_option('SiriusFormulas', 'Tree Score', 'RelativePosition', '60')
+    response.set_column_option('SiriusFormulas', 'Tree Score', 'FormatString', 'F3')
+    response.add_column('SiriusFormulas', '# Explained Peaks', 'Int')
+    response.set_column_option('SiriusFormulas', '# Explained Peaks', 'RelativePosition', '70')
+    response.add_column('SiriusFormulas', '# Explainable Peaks', 'Int')
+    response.set_column_option('SiriusFormulas', '# Explainable Peaks', 'RelativePosition', '80')
+    response.add_column('SiriusFormulas', 'Explained Intensity', 'Float')
+    response.set_column_option('SiriusFormulas', 'Explained Intensity', 'RelativePosition', '90')
+    response.set_column_option('SiriusFormulas', 'Explained Intensity', 'FormatString', 'F2') 
+    # Formula to Compounds connection table
+    formulas_compounds = formulas[['ID', 'Compounds ID']]
+    writeTable(formulas_compounds, 'SiriusFormulas-Compounds', projectSpacePath)
+    response.add_table('SiriusFormulas-Compounds', 
+                       os.path.join(projectSpacePath, 'SiriusFormulas-Compounds.txt'),
+                       data_format='CSVConnectionTable')
+    response.set_table_option('SiriusFormulas-Compounds', 'FirstTable', 'SiriusFormulas')
+    response.set_table_option('SiriusFormulas-Compounds', 'SecondTable', 'Compounds')
+    response.add_column('SiriusFormulas-Compounds', 'ID', 'Long', 'ID')
+    response.add_column('SiriusFormulas-Compounds', 'Compounds ID', 'Int', 'ID')
     
-                    
+    if doCSIFID:
+        # Structures table
+        structures = results_dict['SiriusStructures']
+        structures['Structure'] = [Chem.MolToMolBlock(Chem.rdmolfiles.MolFromSmiles(m)) for 
+                                   m in structures['SMILES']]
+        writeTable(structures, "SiriusStructures", projectSpacePath)
+        response.add_table('SiriusStructures', os.path.join(projectSpacePath, 'SiriusStructures.txt'))
+        response.add_column('SiriusStructures', 'ID', 'Int', 'ID')
+        response.add_column('SiriusStructures', 'Structure', 'String')
+        response.set_column_option('SiriusStructures', 'Structure', 'RelativePosition', '10')
+        response.set_column_option('SiriusStructures', 'Structure', 'SpecialDisplay', '9ACA6BD7-EB95-4F7D-A293-F18EC06D10CF')
+        response.add_column('SiriusStructures', 'Name', 'String')
+        response.set_column_option('SiriusStructures', 'Name', 'RelativePosition', '20')
+        response.add_column('SiriusStructures', 'Formula', 'String')
+        response.set_column_option('SiriusStructures', 'Formula', 'RelativePosition', '30')
+        response.add_column('SiriusStructures', 'Adduct', 'String')
+        response.set_column_option('SiriusStructures', 'Adduct', 'RelativePosition', '40')
+        response.add_column('SiriusStructures', 'Rank', 'Int')
+        response.set_column_option('SiriusStructures', 'Rank', 'RelativePosition', '50')
+        response.add_column('SiriusStructures', 'CSI Score', 'Float')
+        response.set_column_option('SiriusStructures', 'CSI Score', 'RelativePosition', '60')
+        response.set_column_option('SiriusStructures', 'CSI Score', 'FormatString', 'F2')
+        response.add_column('SiriusStructures', 'Tanimoto Similarity', 'Float')
+        response.set_column_option('SiriusStructures', 'Tanimoto Similarity', 'RelativePosition', '70')
+        response.set_column_option('SiriusStructures', 'Tanimoto Similarity', 'FormatString', 'F3')
+        response.add_column('SiriusStructures', 'PubChem ID', 'Int')
+        response.set_column_option('SiriusStructures', 'PubChem ID', 'RelativePosition', '80')
+        response.add_column('SiriusStructures', 'DSSTox ID', 'String')
+        response.set_column_option('SiriusStructures', 'DSSTox ID', 'RelativePosition', '90')
+        # Structures to Compounds connection table
+        structures_compounds = structures[['ID', 'Compounds ID']]
+        writeTable(structures_compounds, 'SiriusStructures-Compounds', projectSpacePath)
+        response.add_table('SiriusStructures-Compounds', 
+                           os.path.join(projectSpacePath, 'SiriusStructures-Compounds.txt'),
+                           data_format='CSVConnectionTable')
+        response.set_table_option('SiriusStructures-Compounds', 'FirstTable', 'SiriusStructures')
+        response.set_table_option('SiriusStructures-Compounds', 'SecondTable', 'Compounds')
+        response.add_column('SiriusStructures-Compounds', 'ID', 'Int', 'ID')
+        response.add_column('SiriusStructures-Compounds', 'Compounds ID', 'Int', 'ID')
+        # Structures to SiriusFormulas connection table
+        structures_formulas = structures[['ID', 'SiriusFormulas ID']]
+        writeTable(structures_formulas, 'SiriusStructures-SiriusFormulas', projectSpacePath)
+        response.add_table('SiriusStructures-SiriusFormulas', 
+                           os.path.join(projectSpacePath, 'SiriusStructures-SiriusFormulas.txt'),
+                           data_format='CSVConnectionTable')
+        response.set_table_option('SiriusStructures-SiriusFormulas', 'FirstTable', 'SiriusStructures')
+        response.set_table_option('SiriusStructures-SiriusFormulas', 'SecondTable', 'SiriusFormulas')
+        response.add_column('SiriusStructures-SiriusFormulas', 'ID', 'Int', 'ID')
+        response.add_column('SiriusStructures-SiriusFormulas', 'SiriusFormulas ID', 'Long', 'ID')
+        
+        
+    if doClassyFire:
+        # Classes table
+        classes = results_dict['SiriusClasses']
+        writeTable(classes, "SiriusClasses", projectSpacePath)
+        response.add_table('SiriusClasses', os.path.join(projectSpacePath, 'SiriusClasses.txt'))
+        response.add_column('SiriusClasses', 'ID', 'Int', 'ID')
+        response.add_column('SiriusClasses', 'Classification Level', 'String')
+        response.set_column_option('SiriusClasses', 'Classification Level', 'RelativePosition', '10')
+        response.add_column('SiriusClasses', 'Classification Name', 'String')
+        response.set_column_option('SiriusClasses', 'Classification Name', 'RelativePosition', '20')
+        response.add_column('SiriusClasses', 'Description', 'String')
+        response.set_column_option('SiriusClasses', 'Description', 'RelativePosition', '30')
+        response.add_column('SiriusClasses', 'Class ID', 'Int')
+        response.set_column_option('SiriusClasses', 'Class ID', 'RelativePosition', '40')
+        response.add_column('SiriusClasses', 'Probability', 'Float')
+        response.set_column_option('SiriusClasses', 'Probability', 'RelativePosition', '50')
+        response.set_column_option('SiriusClasses', 'Probability', 'FormatString', 'F3')
+        # Classes to Compounds connection table
+        classes_compounds = classes[['ID', 'Compounds ID']]
+        writeTable(classes_compounds, 'SiriusClasses-Compounds', projectSpacePath)
+        response.add_table('SiriusClasses-Compounds', 
+                           os.path.join(projectSpacePath, 'SiriusClasses-Compounds.txt'),
+                           data_format='CSVConnectionTable')
+        response.set_table_option('SiriusClasses-Compounds', 'FirstTable', 'SiriusClasses')
+        response.set_table_option('SiriusClasses-Compounds', 'SecondTable', 'Compounds')
+        response.add_column('SiriusClasses-Compounds', 'ID', 'Int', 'ID')
+        response.add_column('SiriusClasses-Compounds', 'Compounds ID', 'Int', 'ID')
+        # Structures to SiriusFormulas connection table
+        classes_formulas = classes[['ID', 'SiriusFormulas ID']]
+        writeTable(classes_formulas, 'SiriusClasses-SiriusFormulas', projectSpacePath)
+        response.add_table('SiriusClasses-SiriusFormulas', 
+                           os.path.join(projectSpacePath, 'SiriusClasses-SiriusFormulas.txt'),
+                           data_format='CSVConnectionTable')
+        response.set_table_option('SiriusClasses-SiriusFormulas', 'FirstTable', 'SiriusClasses')
+        response.set_table_option('SiriusClasses-SiriusFormulas', 'SecondTable', 'SiriusFormulas')
+        response.add_column('SiriusClasses-SiriusFormulas', 'ID', 'Int', 'ID')
+        response.add_column('SiriusClasses-SiriusFormulas', 'SiriusFormulas ID', 'Long', 'ID')
+        
+    if doMsNovelist:
+        # deNovo Structures table
+        deNovoStructures = results_dict['SiriusDeNovoStructures']
+        deNovoStructures['Structure'] = [Chem.MolToMolBlock(Chem.rdmolfiles.MolFromSmiles(m)) for 
+                                         m in deNovoStructures['SMILES']]
+        writeTable(deNovoStructures, "SiriusDeNovoStructures", projectSpacePath)
+        response.add_table('SiriusDeNovoStructures', os.path.join(projectSpacePath, 'SiriusDeNovoStructures.txt'))
+        response.add_column('SiriusDeNovoStructures', 'ID', 'Int', 'ID')
+        response.add_column('SiriusDeNovoStructures', 'Structure', 'String')
+        response.set_column_option('SiriusDeNovoStructures', 'Structure', 'RelativePosition', '10')
+        response.set_column_option('SiriusDeNovoStructures', 'Structure', 'SpecialDisplay', '9ACA6BD7-EB95-4F7D-A293-F18EC06D10CF')
+        response.add_column('SiriusDeNovoStructures', 'Name', 'String')
+        response.set_column_option('SiriusDeNovoStructures', 'Name', 'RelativePosition', '20')
+        response.add_column('SiriusDeNovoStructures', 'Formula', 'String')
+        response.set_column_option('SiriusDeNovoStructures', 'Formula', 'RelativePosition', '30')
+        response.add_column('SiriusDeNovoStructures', 'Adduct', 'String')
+        response.set_column_option('SiriusDeNovoStructures', 'Adduct', 'RelativePosition', '40')
+        response.add_column('SiriusDeNovoStructures', 'Rank', 'Int')
+        response.set_column_option('SiriusDeNovoStructures', 'Rank', 'RelativePosition', '50')
+        response.add_column('SiriusDeNovoStructures', 'CSI Score', 'Float')
+        response.set_column_option('SiriusDeNovoStructures', 'CSI Score', 'RelativePosition', '60')
+        response.set_column_option('SiriusDeNovoStructures', 'CSI Score', 'FormatString', 'F2')
+        response.add_column('SiriusDeNovoStructures', 'Tanimoto Similarity', 'Float')
+        response.set_column_option('SiriusDeNovoStructures', 'Tanimoto Similarity', 'RelativePosition', '70')
+        response.set_column_option('SiriusDeNovoStructures', 'Tanimoto Similarity', 'FormatString', 'F3')
+        response.add_column('SiriusDeNovoStructures', 'PubChem ID', 'Int')
+        response.set_column_option('SiriusDeNovoStructures', 'PubChem ID', 'RelativePosition', '80')
+        response.add_column('SiriusDeNovoStructures', 'DSSTox ID', 'String')
+        response.set_column_option('SiriusDeNovoStructures', 'DSSTox ID', 'RelativePosition', '90')
+        # de Novo Structures to Compounds connection table
+        deNovoStructures_compounds = deNovoStructures[['ID', 'Compounds ID']]
+        writeTable(deNovoStructures_compounds, 'SiriusDeNovoStructures-Compounds', projectSpacePath)
+        response.add_table('SiriusDeNovoStructures-Compounds', 
+                           os.path.join(projectSpacePath, 'SiriusDeNovoStructures-Compounds.txt'),
+                           data_format='CSVConnectionTable')
+        response.set_table_option('SiriusDeNovoStructures-Compounds', 'FirstTable', 'SiriusDeNovoStructures')
+        response.set_table_option('SiriusDeNovoStructures-Compounds', 'SecondTable', 'Compounds')
+        response.add_column('SiriusDeNovoStructures-Compounds', 'ID', 'Int', 'ID')
+        response.add_column('SiriusDeNovoStructures-Compounds', 'Compounds ID', 'Int', 'ID')
+        # de Novo Structures to SiriusFormulas connection table
+        deNovoStructures_formulas = deNovoStructures[['ID', 'SiriusFormulas ID']]
+        writeTable(deNovoStructures_formulas, 'SiriusDeNovoStructures-SiriusFormulas', projectSpacePath)
+        response.add_table('SiriusDeNovoStructures-SiriusFormulas', 
+                           os.path.join(projectSpacePath, 'SiriusDeNovoStructures-SiriusFormulas.txt'),
+                           data_format='CSVConnectionTable')
+        response.set_table_option('SiriusDeNovoStructures-SiriusFormulas', 'FirstTable', 'SiriusDeNovoStructures')
+        response.set_table_option('SiriusDeNovoStructures-SiriusFormulas', 'SecondTable', 'SiriusFormulas')
+        response.add_column('SiriusDeNovoStructures-SiriusFormulas', 'ID', 'Int', 'ID')
+        response.add_column('SiriusDeNovoStructures-SiriusFormulas', 'SiriusFormulas ID', 'Long', 'ID')
+        
     
     # Save response file to disk
     response.save(response_path)

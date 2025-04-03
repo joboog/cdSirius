@@ -156,6 +156,7 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                                                              opt_fields=["statistics","compoundClasses"])
             formulas_dicts = [FormulaCandidate.to_dict(formResult) for 
                               formResult in formulas]
+            # Get compound class predictions if available
             for cmpdClass in formulas_dicts:
                 if jobSub.canopus_params.enabled and cmpdClass['compoundClasses'] is not None:
                     cmpdClass_df = pd.DataFrame.from_dict(cmpdClass['compoundClasses']['classyFireLineage'])
@@ -231,11 +232,34 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                                                                  featId,
                                                                  opt_fields=["dbLinks"])
             deNovoStructures_dicts = [StructureCandidate.to_dict(deNovoResult) for 
-                                deNovoResult in deNovoStructures]
+                                      deNovoResult in deNovoStructures]
             deNovoStructure_df = pd.DataFrame.from_dict(deNovoStructures_dicts)
             if not deNovoStructure_df.empty:
+                deNovodbLinks = deNovoStructure_df['dbLinks']
+                deNovodbLinkList = []
+                for deNovodbLink in deNovodbLinks:
+                    deNovoPubChemID = next((item for item in deNovodbLink if item["name"] == "PUBCHEM"), None)
+                    if deNovoPubChemID:
+                        deNovoPubChemID = deNovoPubChemID['id']
+                    deNovoDSSToxID = next((item for item in deNovodbLink if item["name"] == "DSSTox"), None)
+                    if deNovoDSSToxID:
+                        deNovoDSSToxID = deNovoDSSToxID['id']
+                    deNovodbLinkList.append({"PubChem ID": deNovoPubChemID, "DSSTox ID": deNovoDSSToxID})
+                deNovodbLink_df = pd.DataFrame(deNovodbLinkList)
+                deNovoStructure_df = pd.concat([deNovoStructure_df, deNovodbLink_df], axis = 1)
+                deNovoStructure_df.drop(['dbLinks','spectralLibraryMatches'], axis = 1, inplace = True)
                 deNovoStructure_df['Compounds ID'] = CDcid
-                deNovoStructure_df.rename(columns={'formulaId': 'SiriusFormulas ID'}, inplace = True)
+                deNovoStructure_df.rename(columns={'formulaId': 'SiriusFormulas ID',
+                                             'inchikey': 'InChIKey',
+                                             'smiles': 'SMILES',
+                                             'structureName': 'Name',
+                                             'xlogP': 'Log Kow',
+                                             'rank': 'Rank',
+                                             'csiScore': 'CSI Score',
+                                             'tanimotoSimilarity': 'Tanimoto Similarity',
+                                             'mcesDistToTopHit': 'MCES Distance to Top Hit',
+                                             'molecularFormula': 'Formula',
+                                             'adduct': 'Adduct'}, inplace = True)
                 deNovoStructureResults.append(deNovoStructure_df)
     
     results_dict = dict()

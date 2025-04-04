@@ -336,8 +336,13 @@ def main():
     if doMsNovelist:
         # deNovo Structures table
         deNovoStructures = results_dict['SiriusDeNovoStructures']
-        deNovoStructures['Structure'] = [Chem.MolToMolBlock(Chem.rdmolfiles.MolFromSmiles(m)) for 
-                                         m in deNovoStructures['SMILES']]
+        deNovoStructureResults = []
+        for m in deNovoStructures['SMILES']:
+            try:
+                deNovoStructureResults.append(Chem.MolToMolBlock(Chem.rdmolfiles.MolFromSmiles(m)))
+            except Exception:
+                deNovoStructureResults.append("")
+        deNovoStructures['Structure'] = deNovoStructureResults
         writeTable(deNovoStructures, "SiriusDeNovoStructures", projectSpacePath)
         response.add_table('SiriusDeNovoStructures', os.path.join(projectSpacePath, 'SiriusDeNovoStructures.txt'))
         response.add_column('SiriusDeNovoStructures', 'ID', 'Int', 'ID')

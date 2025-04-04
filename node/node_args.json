@@ -1,9 +1,9 @@
 {
   "CurrentWorkflowID": 140,
-  "ExpectedResponsePath": "/Users/pleeferguson/scratch/node_response.json",
-  "ResultFilePath": "/Users/pleeferguson/Documents/Projects/CleanStreak 2022/CleanStreak_extracts_FISh.cdResult",
+  "ExpectedResponsePath": "C:\\Users\\pf31\\Documents\\scratch\\node_response.json",
+  "ResultFilePath": "C:\\Users\\pf31\\Documents\\CleanStreak\\CleanStreak2024\\CleanStreak_extracts_FISh.cdResult",
   "NodeParameters": {
-    "Sirius Program Path": "/Applications/sirius-1.localized/sirius.app/Contents/MacOS/sirius",
+    "Sirius Program Path": "C:\\Program Files\\sirius\\sirius.exe",
     "Save Sirius Result": "False",
     "Sirius Username": "lee.ferguson@duke.edu",
     "Sirius Password": "121#Hudson",
@@ -29,7 +29,7 @@
   "Tables": [
     {
       "TableName": "Compounds",
-      "DataFile": "/Users/pleeferguson/scratch/ConsolidatedUnknownCompoundsItem.txt",
+      "DataFile": "C:\\Users\\pf31\\Documents\\scratch\\ConsolidatedUnknownCompoundsItem.txt",
       "DataFormat": "CSV",
       "Options": {},
       "ColumnDescriptions": [

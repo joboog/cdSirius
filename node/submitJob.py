@@ -58,7 +58,9 @@ def startSirius(siriusPath, siriusUser, siriusPW):
 # Create project space
 def makeProjectSpace(api, projectSpaceName, projectSpacePath):
     path = os.path.abspath(projectSpacePath)+"/"+projectSpaceName+".sirius"
-    ps_info = api.projects().create_project_space(projectSpaceName, path)
+    path = os.path.normpath(path)
+    projectAPI = api.projects()
+    ps_info = projectAPI.create_project(projectSpaceName, path_to_project=os.path.normpath(path))
     return(ps_info)
     
 

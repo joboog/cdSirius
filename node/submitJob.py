@@ -162,7 +162,7 @@ def retrieveSiriusResults(api, ps_info, jobSub):
             for cmpdClass in formulas_dicts:
                 if jobSub.canopus_params.enabled and cmpdClass['compoundClasses'] is not None:
                     cmpdClass_df = pd.DataFrame.from_dict(cmpdClass['compoundClasses']['classyFireLineage'])
-                    cmpdClass_df.drop(columns=['type','index'], inplace = True)
+                    cmpdClass_df.drop(columns=['type','index','levelIndex','parentId','parentName'], inplace = True)
                     cmpdClass_df['SiriusFormulas ID'] = cmpdClass['formulaId']
                     cmpdClass_df['Compounds ID'] = CDcid
                     cmpdClass_df.rename(columns={'id': 'Class ID',
@@ -176,7 +176,16 @@ def retrieveSiriusResults(api, ps_info, jobSub):
             formula_df = pd.DataFrame.from_dict(formulas_dicts)
             if not formula_df.empty:
                 formula_df['ppmError'] = pd.DataFrame(formula_df['medianMassDeviation'].tolist())['ppm']
-                formula_df.drop(formula_df.columns[10:19], axis = 1, inplace = True)
+                formula_df.drop(columns=['medianMassDeviation',
+                                         'compoundClasses',
+                                         'siriusScoreNormalized',
+                                         'zodiacScore',
+                                         'fragmentationTree',
+                                         'annotatedSpectrum',
+                                         'isotopePatternAnnotation',
+                                         'lipidAnnotation',
+                                         'predictedFingerprint',
+                                         'canopusPrediction'], inplace = True)
                 formula_df['Compounds ID'] = CDcid
                 formula_df.rename(columns={'formulaId': 'ID',
                                            'molecularFormula': 'Formula',
@@ -215,7 +224,7 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                 structure_df.drop(['dbLinks','spectralLibraryMatches'], axis = 1, inplace = True)
                 structure_df['Compounds ID'] = CDcid
                 structure_df.rename(columns={'formulaId': 'SiriusFormulas ID',
-                                             'inchikey': 'InChIKey',
+                                             'inchiKey': 'InChIKey',
                                              'smiles': 'SMILES',
                                              'structureName': 'Name',
                                              'xlogP': 'Log Kow',
@@ -252,7 +261,7 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                 deNovoStructure_df.drop(['dbLinks','spectralLibraryMatches'], axis = 1, inplace = True)
                 deNovoStructure_df['Compounds ID'] = CDcid
                 deNovoStructure_df.rename(columns={'formulaId': 'SiriusFormulas ID',
-                                             'inchikey': 'InChIKey',
+                                             'inchiKey': 'InChIKey',
                                              'smiles': 'SMILES',
                                              'structureName': 'Name',
                                              'xlogP': 'Log Kow',

@@ -16,8 +16,8 @@
 "SupportedStudyTypes": ["General"],
 
 "ScriptProcessorArguments": {
-"ExecutableCommandLineArguments": "C:\\pythonScripts\\cdSirius\\node\\cdSirius.py %NODEARGS%",
-"ExecutablePath": "C:\\Python311\\python.exe",
+"ExecutableCommandLineArguments": "C:\\Users\\ferguson-lab\\Documents\\cdSirius\\node\\cdSirius.py %NODEARGS%",
+"ExecutablePath": "C:\\Program Files\\Python311\\python.exe",
 "ExpectResponse": true,
 "UseRFriendlyNames": true,
 "RequestedTablesAndColumns": "Compounds: Background"
@@ -28,7 +28,7 @@
 "DataType": "String",
 "Name": "Sirius Program Path",
 "Default": "C:\\Program Files\\sirius\\sirius.exe",
-"Category": "Sirius Program Settings",
+"Category": "1. Sirius Program Settings",
 "Description": "Local path to Sirius executable"
 },
 {
@@ -36,19 +36,19 @@
 "Name": "Save Sirius Result",
 "Default": "False",
 "SelectionValues": ["True", "False"],
-"Category": "Sirius Program Settings",
+"Category": "1. Sirius Program Settings",
 "Description": "Save Sirius project space output for use with Sirius GUI.  If True, project space file is saved in the same directory as the corresponding cdResult file"
 },
 {
 "DataType": "String",
 "Name": "Sirius Username",
-"Category": "Sirius Program Settings",
+"Category": "1. Sirius Program Settings",
 "Description": "Username for Sirius web account, created here: https://portal.bright-giant.com/auth/login"
 },
 {
 "DataType": "String",
 "Name": "Sirius Password",
-"Category": "Sirius Program Settings",
+"Category": "1. Sirius Program Settings",
 "Description": "Password for Sirius web account, created here: https://portal.bright-giant.com/auth/login"
 },
 {
@@ -56,7 +56,7 @@
 "Name": "Checked Feature Status Handling",
 "Default": "All",
 "SelectionValues": ["Checked", "Unchecked", "All"],
-"Category": "Compound Selection Settings",
+"Category": "2. Compound Selection Settings",
 "Description": "How should checked features be handled by Sirius processing?"
 },
 {
@@ -65,7 +65,7 @@
 "Default": "5.5",
 "Minimum": "0",
 "Maximum": "10",
-"Category": "Compound Selection Settings",
+"Category": "2. Compound Selection Settings",
 "Description": "Minimum peak quality rating for Sirius processing"
 },
 {
@@ -74,7 +74,7 @@
 "Default": "1500",
 "Minimum": "0",
 "Maximum": "2000",
-"Category": "Compound Selection Settings",
+"Category": "2. Compound Selection Settings",
 "Description": "Maximum molecular weight for Sirius processing"
 },
 {
@@ -82,7 +82,7 @@
 "Name": "Predict Formulas",
 "Default": "True",
 "SelectionValues": ["True", "False"],
-"Category": "Molecular Formula Prediction Settings",
+"Category": "3. Molecular Formula Prediction Settings",
 "Description": "Toggle prediction of molecular formula by Sirius"
 },
 {
@@ -91,7 +91,7 @@
 "Default": "10",
 "Minimum": "1",
 "Maximum": "100",
-"Category": "Molecular Formula Prediction Settings",
+"Category": "3. Molecular Formula Prediction Settings",
 "Description": "Limit for maximum number of candidate formulas predicted for each compound"
 },
 {
@@ -100,7 +100,7 @@
 "Default": "2",
 "Minimum": "0",
 "Maximum": "20",
-"Category": "Molecular Formula Prediction Settings",
+"Category": "3. Molecular Formula Prediction Settings",
 "Description": "Mass accuracy threshold for MS1 spectra"
 },
 {
@@ -109,7 +109,7 @@
 "Default": "5",
 "Minimum": "0",
 "Maximum": "20",
-"Category": "Molecular Formula Prediction Settings",
+"Category": "3. Molecular Formula Prediction Settings",
 "Description": "Mass accuracy threshold for MS2 spectra"
 },
 {
@@ -117,7 +117,7 @@
 "Name": "Filter by Isotope Pattern",
 "Default": "True",
 "SelectionValues": ["True", "False"],
-"Category": "Molecular Formula Prediction Settings",
+"Category": "3. Molecular Formula Prediction Settings",
 "Description": "When filtering is enabled, molecular formulas are excluded if their theoretical isotope pattern does not match the theoretical one, even if their MS/MS pattern has high score"
 },
 {
@@ -125,7 +125,7 @@
 "Name": "Enforce Lipid Detection Filtering",
 "Default": "True",
 "SelectionValues": ["True", "False"],
-"Category": "Molecular Formula Prediction Settings",
+"Category": "3. Molecular Formula Prediction Settings",
 "Description": "Sirius may predict that an MS/MS spectrum is a lipid spectrum. If enabled, the corresponding molecular formula will be enforced as molecular formula candidate"
 },
 {
@@ -133,7 +133,7 @@
 "Name": "Perform Bottom-Up Formula Search",
 "Default": "True",
 "SelectionValues": ["True", "False"],
-"Category": "Molecular Formula Prediction Settings",
+"Category": "3. Molecular Formula Prediction Settings",
 "Description": "If true, molecular formula generation via bottom up search is enabled"
 },
 {
@@ -142,14 +142,14 @@
 "Default": "400",
 "Minimum": "0",
 "Maximum": "1000",
-"Category": "Molecular Formula Prediction Settings",
+"Category": "3. Molecular Formula Prediction Settings",
 "Description": "Specifies the m/z below which de novo molecular formula generation is enabled. Set to 0 to disable de novo molecular formula generation"
 },
 {
 "DataType": "String",
 "Name": "Formula Elemental Constraints",
 "Default": "HCNOP[4]F[40]",
-"Category": "Molecular Formula Prediction Settings",
+"Category": "3. Molecular Formula Prediction Settings",
 "Description": "Enforced formula constraints are always considered.  Alphabet should be provided as a string with maximum number of given elements in brackets.  Do not add B, Cl, Br, S, or Se to this list - they are detected automatically"
 },
 {
@@ -157,7 +157,7 @@
 "Name": "Predict Structures",
 "Default": "True",
 "SelectionValues": ["True", "False"],
-"Category": "Structure Prediction Settings",
+"Category": "4. Structure Prediction Settings",
 "Description": "Toggle prediction of molecular structure by CSI:FingerID"
 },
 {
@@ -165,7 +165,7 @@
 "Name": "PubChem as Fallback",
 "Default": "True",
 "SelectionValues": ["True", "False"],
-"Category": "Structure Prediction Settings",
+"Category": "4. Structure Prediction Settings",
 "Description": "Use PubChem as a fallback database if no matches found in primary databases. If False, then PubChem will be used as a primary database"
 },
 {
@@ -173,7 +173,7 @@
 "Name": "Predict Compound Classes",
 "Default": "True",
 "SelectionValues": ["True", "False"],
-"Category": "Compound Class Prediction Settings",
+"Category": "5. Compound Class Prediction Settings",
 "Description": "Toggle prediction of compound classes by ClassyFire (CANOPUS)"
 },
 {
@@ -181,7 +181,7 @@
 "Name": "Predict de Novo Structures",
 "Default": "False",
 "SelectionValues": ["True", "False"],
-"Category": "De Novo Structure Prediction Settings",
+"Category": "6. De Novo Structure Prediction Settings",
 "Description": "Toggle prediction of de novo structures by MSNovelist"
 },
 {
@@ -190,7 +190,7 @@
 "Default": "128",
 "Minimum": "1",
 "Maximum": "500",
-"Category": "De Novo Structure Prediction Settings",
+"Category": "6. De Novo Structure Prediction Settings",
 "Description": "Maximum number of de novo structures to be predicted by MSNovelist"
 }
 ]

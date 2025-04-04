@@ -12,7 +12,6 @@ a formatted dict for import into the PySirius API functionality
 
 import pyeds
 import statistics
-from tqdm import tqdm
 
 
 def makeFeatures(cdResult, CheckedOnly, MinPeakRating, MaxMass, Limit):
@@ -42,8 +41,7 @@ def makeFeatures(cdResult, CheckedOnly, MinPeakRating, MaxMass, Limit):
         siriusCompounds = []   
                 
         # extract spectra and information for Sirius input for each compound
-        for cmpd in tqdm(compounds, desc = 'Read data from CD', 
-                         total = min(counts,Limit)): 
+        for cmpd in compounds: 
             # read spectra from DB
             ids = [sp.IDs for hit in cmpd.Children for sp in hit.Children]
             spectra = {sp.IDs: sp for sp in eds.ReadMany("MassSpectrumItem", ids)}

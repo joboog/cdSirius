@@ -20,7 +20,7 @@ from submitJob import startSirius,makeProjectSpace,importCDfeatures,configureJob
 import string
 import random
 import shutil
-from rdkit import Chem
+#from rdkit import Chem
 
 def print_error(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -38,7 +38,7 @@ def writeTable(outTable, outName, outPath):
                     na_rep ='')
 
 def main():
-    print('cdSirius node')
+    print_error('cdSirius node')
                 
     # start in development mode where nodeargs are given explicitely rather than reading it as command line argument
     if sys.argv[1] == '-devel':    
@@ -62,6 +62,7 @@ def main():
                     if table['DataFormat'] != 'CSV':
                         print_error(f"Unknown Data Format {table['DataFormat']}")    
                         exit(1)
+            print_error('Node arguments parsed')
     except Exception as e: 
         print_error('Could not read Compound Discoverer node args')
         print_error(str(e))
@@ -130,6 +131,7 @@ def main():
     # Start the Sirius API
     try:
         api = startSirius(siriusPath, siriusUser, siriusPW)
+        print_error('Sirius API started')
         
     except Exception as e:
         print_error('Could not start the Sirius engine')
@@ -139,6 +141,7 @@ def main():
     # Create and connect to Sirius project space
     try:
         ps_info = makeProjectSpace(api, projectSpaceName, projectSpacePath)
+        print_error(f"Sirius project space created with name {projectSpaceName}")
         
     except Exception as e:
         print_error('Could not create Sirius project space')
@@ -154,9 +157,10 @@ def main():
                          Limit, 
                          ps_info, 
                          api)
+        print_error("CD compounds imported to Sirius project space")
         
     except Exception as e:
-        print_error('Could not create import Compound Discoverer features to Sirius')
+        print_error('Could not import Compound Discoverer compounds to Sirius')
         print_error(e)
         exit(1)
         
@@ -168,6 +172,7 @@ def main():
                          detectableElements, formulaSearchDBs, timeOuts,
                          doCSIFID, structureDBs, PubChemFallback, doClassyFire, 
                          doMsNovelist, msNovelistCandidates, api)
+        print_error("Sirius job configured")
         
     except Exception as e:
         print_error('Could not configure Sirius job input')
@@ -186,6 +191,7 @@ def main():
     # Import results from Sirius job completion
     try:
         results_dict = retrieveSiriusResults(api, ps_info, jobSub)
+        print_error("Sirius processing results retrieved successfully")
          
     except Exception as e:
         print_error('Could not retrieve Sirius processing results')
@@ -247,14 +253,14 @@ def main():
     if doCSIFID:
         # Structures table
         structures = results_dict['SiriusStructures']
-        structures['Structure'] = [Chem.MolToMolBlock(Chem.rdmolfiles.MolFromSmiles(m)) for 
-                                   m in structures['SMILES']]
+        #structures['Structure'] = [Chem.MolToMolBlock(Chem.rdmolfiles.MolFromSmiles(m)) for 
+        #                           m in structures['SMILES']]
         writeTable(structures, "SiriusStructures", projectSpacePath)
         response.add_table('SiriusStructures', os.path.join(projectSpacePath, 'SiriusStructures.txt'))
         response.add_column('SiriusStructures', 'ID', 'Int', 'ID')
-        response.add_column('SiriusStructures', 'Structure', 'String')
-        response.set_column_option('SiriusStructures', 'Structure', 'RelativePosition', '10')
-        response.set_column_option('SiriusStructures', 'Structure', 'SpecialDisplay', '9ACA6BD7-EB95-4F7D-A293-F18EC06D10CF')
+        #response.add_column('SiriusStructures', 'Structure', 'String')
+        #response.set_column_option('SiriusStructures', 'Structure', 'RelativePosition', '10')
+        #response.set_column_option('SiriusStructures', 'Structure', 'SpecialDisplay', '9ACA6BD7-EB95-4F7D-A293-F18EC06D10CF')
         response.add_column('SiriusStructures', 'Name', 'String')
         response.set_column_option('SiriusStructures', 'Name', 'RelativePosition', '20')
         response.add_column('SiriusStructures', 'Formula', 'String')
@@ -273,6 +279,10 @@ def main():
         response.set_column_option('SiriusStructures', 'PubChem ID', 'RelativePosition', '80')
         response.add_column('SiriusStructures', 'DSSTox ID', 'String')
         response.set_column_option('SiriusStructures', 'DSSTox ID', 'RelativePosition', '90')
+        response.add_column('SiriusStructures', 'InChIKey', 'String')
+        response.set_column_option('SiriusStructures', 'InChIKey', 'RelativePosition', '91')
+        response.add_column('SiriusStructures', 'SMILES', 'String')
+        response.set_column_option('SiriusStructures', 'SMILES', 'RelativePosition', '92')
         # Structures to Compounds connection table
         structures_compounds = structures[['ID', 'Compounds ID']]
         writeTable(structures_compounds, 'SiriusStructures-Compounds', projectSpacePath)
@@ -336,19 +346,19 @@ def main():
     if doMsNovelist:
         # deNovo Structures table
         deNovoStructures = results_dict['SiriusDeNovoStructures']
-        deNovoStructureResults = []
-        for m in deNovoStructures['SMILES']:
-            try:
-                deNovoStructureResults.append(Chem.MolToMolBlock(Chem.rdmolfiles.MolFromSmiles(m)))
-            except Exception:
-                deNovoStructureResults.append("")
-        deNovoStructures['Structure'] = deNovoStructureResults
+        #deNovoStructureResults = []
+        #for m in deNovoStructures['SMILES']:
+        #    try:
+        #        deNovoStructureResults.append(Chem.MolToMolBlock(Chem.rdmolfiles.MolFromSmiles(m)))
+        #    except Exception:
+        #        deNovoStructureResults.append("")
+        #deNovoStructures['Structure'] = deNovoStructureResults
         writeTable(deNovoStructures, "SiriusDeNovoStructures", projectSpacePath)
         response.add_table('SiriusDeNovoStructures', os.path.join(projectSpacePath, 'SiriusDeNovoStructures.txt'))
         response.add_column('SiriusDeNovoStructures', 'ID', 'Int', 'ID')
-        response.add_column('SiriusDeNovoStructures', 'Structure', 'String')
-        response.set_column_option('SiriusDeNovoStructures', 'Structure', 'RelativePosition', '10')
-        response.set_column_option('SiriusDeNovoStructures', 'Structure', 'SpecialDisplay', '9ACA6BD7-EB95-4F7D-A293-F18EC06D10CF')
+        #response.add_column('SiriusDeNovoStructures', 'Structure', 'String')
+        #response.set_column_option('SiriusDeNovoStructures', 'Structure', 'RelativePosition', '10')
+        #response.set_column_option('SiriusDeNovoStructures', 'Structure', 'SpecialDisplay', '9ACA6BD7-EB95-4F7D-A293-F18EC06D10CF')
         response.add_column('SiriusDeNovoStructures', 'Name', 'String')
         response.set_column_option('SiriusDeNovoStructures', 'Name', 'RelativePosition', '20')
         response.add_column('SiriusDeNovoStructures', 'Formula', 'String')
@@ -367,6 +377,10 @@ def main():
         response.set_column_option('SiriusDeNovoStructures', 'PubChem ID', 'RelativePosition', '80')
         response.add_column('SiriusDeNovoStructures', 'DSSTox ID', 'String')
         response.set_column_option('SiriusDeNovoStructures', 'DSSTox ID', 'RelativePosition', '90')
+        response.add_column('SiriusDeNovotructures', 'InChIKey', 'String')
+        response.set_column_option('SiriusDeNovotructures', 'InChIKey', 'RelativePosition', '91')
+        response.add_column('SiriusDeNovotructures', 'SMILES', 'String')
+        response.set_column_option('SiriusDeNovotructures', 'SMILES', 'RelativePosition', '92')
         # de Novo Structures to Compounds connection table
         deNovoStructures_compounds = deNovoStructures[['ID', 'Compounds ID']]
         writeTable(deNovoStructures_compounds, 'SiriusDeNovoStructures-Compounds', projectSpacePath)

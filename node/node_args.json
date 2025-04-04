@@ -1,7 +1,7 @@
 {
   "CurrentWorkflowID": 140,
-  "ExpectedResponsePath": "C:\\Users\\pf31\\Documents\\scratch\\node_response.json",
-  "ResultFilePath": "C:\\Users\\pf31\\Documents\\CleanStreak\\CleanStreak2024\\CleanStreak_extracts_FISh.cdResult",
+  "ExpectedResponsePath": "C:/Users/ferguson-lab/Documents/scratch/node_response.json",
+  "ResultFilePath": "D:\\PLF\\Astral_Demo_2023\\Astral Demo\\Burlington_Lumos_POS_sirius.cdResult",
   "NodeParameters": {
     "Sirius Program Path": "C:\\Program Files\\sirius\\sirius.exe",
     "Save Sirius Result": "False",
@@ -22,14 +22,14 @@
     "Predict Structures": "True",
     "PubChem as Fallback": "True",
     "Predict Compound Classes": "True",
-    "Predict de Novo Structures": "True",
+    "Predict de Novo Structures": "False",
     "De Novo Structure Candidates Limit": "128"
   },
   "Version": 1,
   "Tables": [
     {
       "TableName": "Compounds",
-      "DataFile": "C:\\Users\\pf31\\Documents\\scratch\\ConsolidatedUnknownCompoundsItem.txt",
+      "DataFile": "C:/Users/ferguson-lab/Documents/scratch/ConsolidatedUnknownCompoundItem.txt",
       "DataFormat": "CSV",
       "Options": {},
       "ColumnDescriptions": [

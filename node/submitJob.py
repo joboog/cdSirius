@@ -187,7 +187,7 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                                          'predictedFingerprint',
                                          'canopusPrediction'], inplace = True)
                 formula_df['Compounds ID'] = CDcid
-                formula_df.rename(columns={'formulaId': 'ID',
+                formula_df.rename(columns={'formulaId': 'SiriusFormulas ID',
                                            'molecularFormula': 'Formula',
                                            'adduct': 'Adduct',
                                            'rank': 'Rank',
@@ -221,7 +221,9 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                     dbLinkList.append({"PubChem ID": PubChemID, "DSSTox ID": DSSToxID})
                 dbLink_df = pd.DataFrame(dbLinkList)
                 structure_df = pd.concat([structure_df, dbLink_df], axis = 1)
-                structure_df.drop(['dbLinks','spectralLibraryMatches'], axis = 1, inplace = True)
+                structure_df.drop(['dbLinks',
+                                   'spectralLibraryMatches',
+                                   'mcesDistToTopHit'], axis = 1, inplace = True)
                 structure_df['Compounds ID'] = CDcid
                 structure_df.rename(columns={'formulaId': 'SiriusFormulas ID',
                                              'inchiKey': 'InChIKey',
@@ -231,7 +233,6 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                                              'rank': 'Rank',
                                              'csiScore': 'CSI Score',
                                              'tanimotoSimilarity': 'Tanimoto Similarity',
-                                             'mcesDistToTopHit': 'MCES Distance to Top Hit',
                                              'molecularFormula': 'Formula',
                                              'adduct': 'Adduct'}, inplace = True)
                 structureResults.append(structure_df)
@@ -258,7 +259,9 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                     deNovodbLinkList.append({"PubChem ID": deNovoPubChemID, "DSSTox ID": deNovoDSSToxID})
                 deNovodbLink_df = pd.DataFrame(deNovodbLinkList)
                 deNovoStructure_df = pd.concat([deNovoStructure_df, deNovodbLink_df], axis = 1)
-                deNovoStructure_df.drop(['dbLinks','spectralLibraryMatches'], axis = 1, inplace = True)
+                deNovoStructure_df.drop(['dbLinks',
+                                         'spectralLibraryMatches',
+                                         'mcesDistToTopHit'], axis = 1, inplace = True)
                 deNovoStructure_df['Compounds ID'] = CDcid
                 deNovoStructure_df.rename(columns={'formulaId': 'SiriusFormulas ID',
                                              'inchiKey': 'InChIKey',
@@ -268,7 +271,6 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                                              'rank': 'Rank',
                                              'csiScore': 'CSI Score',
                                              'tanimotoSimilarity': 'Tanimoto Similarity',
-                                             'mcesDistToTopHit': 'MCES Distance to Top Hit',
                                              'molecularFormula': 'Formula',
                                              'adduct': 'Adduct'}, inplace = True)
                 deNovoStructureResults.append(deNovoStructure_df)
@@ -279,15 +281,15 @@ def retrieveSiriusResults(api, ps_info, jobSub):
         results_dict['SiriusFormulas'] = siriusFormulas
     if jobSub.structure_db_search_params.enabled: 
         siriusStructures = pd.concat(structureResults, ignore_index=True)
-        siriusStructures['ID'] = siriusStructures.index+1
+        siriusStructures['SiriusStructures ID'] = siriusStructures.index+1
         results_dict['SiriusStructures'] = siriusStructures
     if jobSub.canopus_params.enabled:
         siriusCmpdClasses = pd.concat(cmpdClassResults, ignore_index = True)
-        siriusCmpdClasses['ID'] = siriusCmpdClasses.index+1
+        siriusCmpdClasses['SiriusClasses ID'] = siriusCmpdClasses.index+1
         results_dict['SiriusClasses'] = siriusCmpdClasses
     if jobSub.ms_novelist_params.enabled:
         siriusDeNovoStructures = pd.concat(deNovoStructureResults, ignore_index=True)
-        siriusDeNovoStructures['ID'] = siriusDeNovoStructures.index+1
+        siriusDeNovoStructures['SiriusDeNovoStructures ID'] = siriusDeNovoStructures.index+1
         results_dict['SiriusDeNovoStructures'] = siriusDeNovoStructures    
     return(results_dict)
 

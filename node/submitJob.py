@@ -163,7 +163,7 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                 if jobSub.canopus_params.enabled and cmpdClass['compoundClasses'] is not None:
                     cmpdClass_df = pd.DataFrame.from_dict(cmpdClass['compoundClasses']['classyFireLineage'])
                     cmpdClass_df.drop(columns=['type','index','levelIndex','parentId','parentName'], inplace = True)
-                    cmpdClass_df['SiriusFormulas ID'] = cmpdClass['formulaId']
+                    cmpdClass_df['siriusFormID'] = cmpdClass['formulaId']
                     cmpdClass_df['Compounds ID'] = CDcid
                     cmpdClass_df.rename(columns={'id': 'Class ID',
                                                  'level': 'Classification Level',
@@ -187,7 +187,7 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                                          'predictedFingerprint',
                                          'canopusPrediction'], inplace = True)
                 formula_df['Compounds ID'] = CDcid
-                formula_df.rename(columns={'formulaId': 'SiriusFormulas ID',
+                formula_df.rename(columns={'formulaId': 'siriusFormID',
                                            'molecularFormula': 'Formula',
                                            'adduct': 'Adduct',
                                            'rank': 'Rank',
@@ -225,7 +225,7 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                                    'spectralLibraryMatches',
                                    'mcesDistToTopHit'], axis = 1, inplace = True)
                 structure_df['Compounds ID'] = CDcid
-                structure_df.rename(columns={'formulaId': 'SiriusFormulas ID',
+                structure_df.rename(columns={'formulaId': 'siriusFormID',
                                              'inchiKey': 'InChIKey',
                                              'smiles': 'SMILES',
                                              'structureName': 'Name',
@@ -260,10 +260,9 @@ def retrieveSiriusResults(api, ps_info, jobSub):
                 deNovodbLink_df = pd.DataFrame(deNovodbLinkList)
                 deNovoStructure_df = pd.concat([deNovoStructure_df, deNovodbLink_df], axis = 1)
                 deNovoStructure_df.drop(['dbLinks',
-                                         'spectralLibraryMatches',
-                                         'mcesDistToTopHit'], axis = 1, inplace = True)
+                                         'spectralLibraryMatches'], axis = 1, inplace = True)
                 deNovoStructure_df['Compounds ID'] = CDcid
-                deNovoStructure_df.rename(columns={'formulaId': 'SiriusFormulas ID',
+                deNovoStructure_df.rename(columns={'formulaId': 'siriusFormID',
                                              'inchiKey': 'InChIKey',
                                              'smiles': 'SMILES',
                                              'structureName': 'Name',
@@ -278,18 +277,49 @@ def retrieveSiriusResults(api, ps_info, jobSub):
     results_dict = dict()
     if jobSub.formula_id_params.enabled:
         siriusFormulas = pd.concat(formulaResults, ignore_index=True)
+        siriusFormulas['SiriusFormulas ID'] = siriusFormulas.index+1
+        siriusFormulas['siriusFormID'] = siriusFormulas['siriusFormID'].astype('Int64')
+        siriusFormulas['Compounds ID'] = siriusFormulas['Compounds ID'].astype('Int64')
+        siriusFormulasKey = siriusFormulas[['SiriusFormulas ID', 'siriusFormID']]
+        siriusFormulas.drop(['siriusFormID'], axis = 1, inplace = True)
         results_dict['SiriusFormulas'] = siriusFormulas
     if jobSub.structure_db_search_params.enabled: 
         siriusStructures = pd.concat(structureResults, ignore_index=True)
         siriusStructures['SiriusStructures ID'] = siriusStructures.index+1
+        siriusStructures['SiriusStructures ID'] = siriusStructures['SiriusStructures ID'].astype('Int64')
+        siriusStructures['siriusFormID'] = siriusStructures['siriusFormID'].astype('Int64')
+        siriusStructures['Compounds ID'] = siriusStructures['Compounds ID'].astype('Int64')
+        siriusStructures['PubChem ID'] = siriusStructures['PubChem ID'].astype('Int64')
+        siriusStructures['Rank'] = siriusStructures['Rank'].astype('Int64')
+        siriusStructuresJoined = pd.merge(siriusStructures, siriusFormulasKey,
+                                          on = 'siriusFormID',
+                                          how = 'outer')
+        siriusStructures = siriusStructuresJoined.drop(['siriusFormID'], axis = 1)
         results_dict['SiriusStructures'] = siriusStructures
     if jobSub.canopus_params.enabled:
         siriusCmpdClasses = pd.concat(cmpdClassResults, ignore_index = True)
         siriusCmpdClasses['SiriusClasses ID'] = siriusCmpdClasses.index+1
+        siriusCmpdClasses['SiriusClasses ID'] = siriusCmpdClasses['SiriusClasses ID'].astype('Int64')
+        siriusCmpdClasses['siriusFormID'] = siriusCmpdClasses['siriusFormID'].astype('Int64')
+        siriusCmpdClasses['Compounds ID'] = siriusCmpdClasses['Compounds ID'].astype('Int64')
+        siriusCmpdClasses['Class ID'] = siriusCmpdClasses['Class ID'].astype('Int64')
+        siriusCmpdClassesJoined = pd.merge(siriusCmpdClasses, siriusFormulasKey,
+                                           on = 'siriusFormID',
+                                           how = 'outer')
+        siriusCmpdClasses = siriusCmpdClassesJoined.drop(['siriusFormID'], axis = 1)
         results_dict['SiriusClasses'] = siriusCmpdClasses
     if jobSub.ms_novelist_params.enabled:
         siriusDeNovoStructures = pd.concat(deNovoStructureResults, ignore_index=True)
         siriusDeNovoStructures['SiriusDeNovoStructures ID'] = siriusDeNovoStructures.index+1
+        siriusDeNovoStructures['SiriusDeNovoStructures ID'] = siriusDeNovoStructures['SiriusDeNovoStructures ID'].astype('Int64')
+        siriusDeNovoStructures['siriusFormID'] = siriusDeNovoStructures['siriusFormID'].astype('Int64')
+        siriusDeNovoStructures['Compounds ID'] = siriusDeNovoStructures['Compounds ID'].astype('Int64')
+        siriusDeNovoStructures['PubChem ID'] = siriusDeNovoStructures['PubChem ID'].astype('Int64')
+        siriusDeNovoStructures['Rank'] = siriusDeNovoStructures['Rank'].astype('Int64')
+        siriusDeNovoStructuresJoined = pd.merge(siriusDeNovoStructures, siriusFormulasKey,
+                                                on = 'siriusFormID',
+                                                how = 'outer')
+        siriusDeNovoStructures = siriusDeNovoStructuresJoined.drop(['siriusFormID'], axis = 1)
         results_dict['SiriusDeNovoStructures'] = siriusDeNovoStructures    
     return(results_dict)
 

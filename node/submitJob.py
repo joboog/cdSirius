@@ -293,7 +293,7 @@ def retrieveSiriusResults(api, ps_info, jobSub):
         siriusStructures['Rank'] = siriusStructures['Rank'].astype('Int64')
         siriusStructuresJoined = pd.merge(siriusStructures, siriusFormulasKey,
                                           on = 'siriusFormID',
-                                          how = 'outer')
+                                          how = 'inner')
         siriusStructures = siriusStructuresJoined.drop(['siriusFormID'], axis = 1)
         results_dict['SiriusStructures'] = siriusStructures
     if jobSub.canopus_params.enabled:
@@ -305,7 +305,7 @@ def retrieveSiriusResults(api, ps_info, jobSub):
         siriusCmpdClasses['Class ID'] = siriusCmpdClasses['Class ID'].astype('Int64')
         siriusCmpdClassesJoined = pd.merge(siriusCmpdClasses, siriusFormulasKey,
                                            on = 'siriusFormID',
-                                           how = 'outer')
+                                           how = 'inner')
         siriusCmpdClasses = siriusCmpdClassesJoined.drop(['siriusFormID'], axis = 1)
         results_dict['SiriusClasses'] = siriusCmpdClasses
     if jobSub.ms_novelist_params.enabled:
@@ -318,7 +318,7 @@ def retrieveSiriusResults(api, ps_info, jobSub):
         siriusDeNovoStructures['Rank'] = siriusDeNovoStructures['Rank'].astype('Int64')
         siriusDeNovoStructuresJoined = pd.merge(siriusDeNovoStructures, siriusFormulasKey,
                                                 on = 'siriusFormID',
-                                                how = 'outer')
+                                                how = 'inner')
         siriusDeNovoStructures = siriusDeNovoStructuresJoined.drop(['siriusFormID'], axis = 1)
         results_dict['SiriusDeNovoStructures'] = siriusDeNovoStructures    
     return(results_dict)

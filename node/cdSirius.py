@@ -92,7 +92,7 @@ def main():
     CheckedOnly = parameters['Checked Feature Status Handling'] == "Checked"
     MinPeakRating = float(parameters['Peak Quality Threshold'])
     MaxMass = float(parameters['Maximum MW'])
-    Limit = 500 # Arbitrary limit switch for debugging
+    Limit = 10000 # Arbitrary limit switch for debugging
 
     # Sirius job parameters
     # Formula prediction params

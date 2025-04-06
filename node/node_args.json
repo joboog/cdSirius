@@ -1,7 +1,7 @@
 {
   "CurrentWorkflowID": 140,
   "ExpectedResponsePath": "C:/Users/ferguson-lab/Documents/scratch/node_response.json",
-  "ResultFilePath": "D:\\PLF\\Astral_Demo_2023\\Astral Demo\\Burlington_Lumos_POS_sirius.cdResult",
+  "ResultFilePath": "D:\\PLF\\Astral_Demo_2023\\Astral Demo\\Burlington_Lumos_POS.cdResult",
   "NodeParameters": {
     "Sirius Program Path": "C:\\Program Files\\sirius\\sirius.exe",
     "Save Sirius Result": "False",

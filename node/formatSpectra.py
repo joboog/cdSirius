@@ -44,6 +44,8 @@ def makeFeatures(cdResult, CheckedOnly, MinPeakRating, MaxMass, Limit):
         for cmpd in compounds: 
             # read spectra from DB
             ids = [sp.IDs for hit in cmpd.Children for sp in hit.Children]
+            if len(ids) == 0:
+                continue
             spectra = {sp.IDs: sp for sp in eds.ReadMany("MassSpectrumItem", ids)}
             
             # Get peak width information for compound

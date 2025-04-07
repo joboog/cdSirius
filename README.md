@@ -43,16 +43,16 @@ After adding the node to the workflow, the processing configuration dialogue is 
    **Figure 3.** Sirius node parameter configuration.
 
 ### cdSirius parameter settings
-1.  Sirius Program Settings:  These are global settings for the Sirius program service.
+1.  **Sirius Program Settings:**  These are global settings for the Sirius program service.
    - <ins>Sirius Program Path</ins>: Here you can set the program path for the Sirius executable.  The default should be suitable for most installations, but can be changed for non-standard installations.
    - <ins>Save Sirius Result</ins>: Setting this to `True` will enable the .sirius workspace to be persisted as a permanent file, saved to the same directory with the cdResult file.  This is useful if e.g. you plan to re-open and analyze data using the Sirius GUI at a later time.
    - <ins>Sirius Username</ins>: Your username as configured on the BrightGiant web portal as described above
    - <ins>Sirius Password</ins>: Your password as configured on the BrightGiant web portal as described above (**Note**: Do not re-use sensitive passwords here as this information is not encrypted or hidden)
-2.  Compound Selection Settings:  These settings modify which Compounds within the CD processing environment are selected for submission to Sirius
+2.  **Compound Selection Settings:**  These settings modify which Compounds within the CD processing environment are selected for submission to Sirius
    - <ins>Checked Feature Status Handling</ins>: This is a switch that allows for down-selection of only compounds of interest when cdSirius is used in reprocessing of existing cdResult files.  Selecting "Checked" will pass only "checked" compounds to Sirius for calculation. The default of "All" will pass all non-background compounds (which have not been pre-filtered within the workflow by peak quality thresholds) to the Sirius service.
    - <ins>Peak Quality Threshold</ins>: This threshold allows a more stringent selection of chromatographic peaks for Sirius processing.  See the CD documentation for an explanation of peak quality metrics.
    - <ins>Maximum MW</ins>: Sirius computation becomes extremely slow for large molecules, so it is best to limit the upper MW range to only those of interest for a particular analysis.
-3.  Molecular Formula Prediction Settings:  This set of parameters controls the "base" molecular formula calculation functions within Sirius and is necessary for all further processing
+3.  **Molecular Formula Prediction Settings:**  This set of parameters controls the "base" molecular formula calculation functions within Sirius and is necessary for all further processing
    - <ins>Predict Formulas</ins>: Must be set to "True" for any processing to occur.  Set to False only for program debugging purposes.
    - 
 

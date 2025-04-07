@@ -57,6 +57,8 @@ After adding the node to the workflow, the processing configuration dialogue is 
    - <ins>Maximum Formula Candidates</ins>: Adjust to increase or decrease the allowable formula candidates that can be considered by Sirius.
    - <ins>MS1 Mass Accuracy [ppm]</ins>: The known mass accuracy threshold (in ppm) for your MS1 data.  _This is a critical parameter and must be set accordingly.  If your instrument is equipped with EasyIC, it is suggested that you use it_
    - <ins>MS2 Mass Accuracy [ppm]</ins>: The known mass accuracy threshold (in ppm) for your MS2 data.  _This is also critical and is often a less accurate measure than for MS1, especially when using lower resolutions (e.g. 15K).  It is not recommended to use EasyIC for Orbitrap MS2 with resolutions < 60K_
-   - <ins>Filter by Isotope Pattern</ins>:
+   - <ins>Filter by Isotope Pattern</ins>: Enabling this parameter will use isotope pattern measurement as a pre-filter to exclude formulas that are inconsistent with the measured isotope pattern, regardless of MS/MS tree score.
+   - <ins>Enforce Lipid Detection Filtering</ins>: This setting enables an internal Sirius algorithm that attempts to detect fragmentation patterns characteristic of lipids.  When detected, the corresponding lipid-like molecular formula will be prioritized as a candidate.
+   - <ins>Perform Bottom-Up Formula Search</ins>: This 
 
 

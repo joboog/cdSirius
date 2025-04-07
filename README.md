@@ -14,7 +14,7 @@ Installation of cdSirius requires a number of dependencies to be installed on th
 ## Sirius user account
 To run Sirius with CSI:FingerID and CANOPUS functionality, you will need a Sirius user account.  You can create a user account as described in the [Sirius Wiki](https://v6.docs.sirius-ms.io/account-and-license/).  The username and password will be used in the cdSirius node for authentication.  Do not re-use a sensitive password for this user account, as the password will not be encrypted and will be visible in plain text within the CD method editor. _Note_: If you are an academic user, you will qualify for a free account, but you must use your institutional email address when you register your account.  
 ## Installation
-1. Download the source code and unpack it to a location accessible by all users.  An example might be `C:/python/cdSirius`.
+1. After dependencies above are fulfilled, download the source code and unpack it to a location accessible by all users.  An example might be `C:/python/cdSirius`.
 2. Create a new folder at `C:/Program Files/Thermo/Compound Discoverer 3.3/Tools/Scripts/cdSirius` and copy the following files from the source code root directory to the newly created folder.  You will need administrator privileges for this:
    - `node.json`
    - `IMG_16x16.png`
@@ -30,5 +30,5 @@ To run Sirius with CSI:FingerID and CANOPUS functionality, you will need a Siriu
 
    **Figure 2.** Scanning for missing features within the CD license manager dialogue
 
-
+6.  Close and re-start Compound Discoverer to complete installation and allow new nodes to be registered.
 

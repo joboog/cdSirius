@@ -42,6 +42,9 @@ After adding the node to the workflow, the processing configuration dialogue is 
 
    **Figure 3.** Sirius node parameter configuration.
 
-Note
+The parameters are as follows:
+1.  Sirius Program Settings:
+   - <ins>Sirius Program Path</ins> Here you can set the program path for the Sirius executable.  The default should be suitable for most installations, but can be changed for non-standard installations.
+   - 
 
 

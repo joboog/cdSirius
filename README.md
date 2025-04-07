@@ -32,7 +32,7 @@ To run Sirius with CSI:FingerID and CANOPUS functionality, you will need a Siriu
 
 6.  Close and re-start Compound Discoverer to complete installation and allow new nodes to be registered.
 ## Using cdSirius within a Compound Discoverer workflow
-The cdSirius node is a post-processing node that can be appended to an existing full processing node, or it can be included in a "reprocessing" workflow to retrospectively add Sirius results to the cdResult file.  Either way, you will find the new Sirius node within the Workflow Editor Node menu, in the _10. Post-Processing_ sub-menu:
+The cdSirius node is a post-processing node that can be appended to an existing full processing workflow, or it can be included in a "reprocessing" workflow to retrospectively add Sirius results to the cdResult file.  Either way, you will find the new Sirius node within the Workflow Editor Node menu, in the _10. Post-Processing_ sub-menu:
    
    <img width="194" alt="image" src="https://github.com/user-attachments/assets/c5a6a15b-ec71-4182-91bf-ca05b04d28fd" />
 

@@ -34,13 +34,13 @@ To run Sirius with CSI:FingerID and CANOPUS functionality, you will need a Siriu
 ## Using cdSirius within a Compound Discoverer workflow
 The cdSirius node is a post-processing node that can be appended to an existing full processing node, or it can be included in a "reprocessing" workflow to retrospectively add Sirius results to the cdResult file.  Either way, you will find the new Sirius node within the Workflow Editor Node menu, in the _10. Post-Processing_ sub-menu:
    
-   <img width="194" alt="image" src="https://github.com/user-attachments/assets/c5a6a15b-ec71-4182-91bf-ca05b04d28fd" />
+      <img width="194" alt="image" src="https://github.com/user-attachments/assets/c5a6a15b-ec71-4182-91bf-ca05b04d28fd" />
 
 After adding the node to the workflow, the processing configuration dialogue is available for editing.  Default parameters are provided for most settings:
 
-   <img width="567" alt="image" src="https://github.com/user-attachments/assets/76b6c9a8-f21d-40dd-8cb0-7f5e6265e309" />
+      <img width="567" alt="image" src="https://github.com/user-attachments/assets/76b6c9a8-f21d-40dd-8cb0-7f5e6265e309" />
 
-   **Figure 3.** Sirius node parameter configuration.
+      **Figure 3.** Sirius node parameter configuration.
 
 ### cdSirius parameter settings
 1.  **Sirius Program Settings:**  These are global settings for the Sirius program service.

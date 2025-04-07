@@ -59,6 +59,8 @@ After adding the node to the workflow, the processing configuration dialogue is 
    - <ins>MS2 Mass Accuracy [ppm]</ins>: The known mass accuracy threshold (in ppm) for your MS2 data.  _This is also critical and is often a less accurate measure than for MS1, especially when using lower resolutions (e.g. 15K).  It is not recommended to use EasyIC for Orbitrap MS2 with resolutions < 60K_
    - <ins>Filter by Isotope Pattern</ins>: Enabling this parameter will use isotope pattern measurement as a pre-filter to exclude formulas that are inconsistent with the measured isotope pattern, regardless of MS/MS tree score.
    - <ins>Enforce Lipid Detection Filtering</ins>: This setting enables an internal Sirius algorithm that attempts to detect fragmentation patterns characteristic of lipids.  When detected, the corresponding lipid-like molecular formula will be prioritized as a candidate.
-   - <ins>Perform Bottom-Up Formula Search</ins>: This 
+   - <ins>Perform Bottom-Up Formula Search</ins>: This setting allows for the use of a "bottom-up" formula candidate selection strategy, which uses combinations of known formulas for potential sub-fragments to build candidate molecular formulas.  It is less restrictive than searching a database for candidate formulas but is also less computationally-intensive than a true _de novo_ formula prediction strategy.
+   - <ins>_De novo_ Formula Generation Threshold</ins>: Below this _m/z_, all molecular formulas are calculated using a _de novo_ approach, which maximizes the chance to observe novel formulas (which are not present in any databases).  Above this _m/z_, formula candidates are predicted using the "bottom-up" strategy if enabled above.
+   - 
 
 

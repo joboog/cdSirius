@@ -17,5 +17,7 @@ Installation of cdSirius requires a number of dependencies to be installed on th
    - `node.json`
    - `IMG_16x16.png`
    - `IMG_32x32.png`
-3. Edit the node.json file you just copied to correct the paths in `"ScriptProcessorArguments"` for `"ExecutableCommandLineArguments"` and `"ExecutablePath"` and in 
-<img width="674" alt="image" src="https://github.com/user-attachments/assets/db45bb6c-96a9-40a2-ac88-aeb97f988c5b" />
+3. Edit the node.json file you just copied to correct the paths in lines 19, 20, and 30 according to your local installation. 
+<img width="693" alt="image" src="https://github.com/user-attachments/assets/9c965c4d-73cd-4ccb-9d09-5d451a725f1f" />
+4. 
+

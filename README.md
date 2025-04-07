@@ -42,7 +42,7 @@ After adding the node to the workflow, the processing configuration dialogue is 
 
    **Figure 3.** Sirius node parameter configuration.
 
-The parameters are as follows:
+### cdSirius parameter settings
 1.  Sirius Program Settings:  These are global settings for the Sirius program service.
    - <ins>Sirius Program Path</ins>: Here you can set the program path for the Sirius executable.  The default should be suitable for most installations, but can be changed for non-standard installations.
    - <ins>Save Sirius Result</ins>: Setting this to `True` will enable the .sirius workspace to be persisted as a permanent file, saved to the same directory with the cdResult file.  This is useful if e.g. you plan to re-open and analyze data using the Sirius GUI at a later time.

@@ -5,9 +5,11 @@ Implementation of Sirius within Compound Discoverer uses the scripting node func
 ## Dependencies
 Installation of cdSirius requires a number of dependencies to be installed on the host PC:
 * Fully licensed installation of Compound Discoverer v3.3
-* [Sirius program](https://v6.docs.sirius-ms.io/install/)
+* [Sirius](https://v6.docs.sirius-ms.io/install/) minimum program version 6.0.1
+* [Python v.3.11](https://www.python.org/downloads/release/python-3110/).  Note that more recent versions of Python may work but have not been tested.  _Note:_ it is recommended to install Python at `C:/Program Files/Python311/python.exe`.
 * [pySirius](https://github.com/sirius-ms/sirius-client-openAPI/tree/master/client-api_python) python package implementing the Sirius REST API for interfacing
 * [pyEDS](https://github.com/thermofisherlsms/pyeds/tree/master) python package for programmatic access to mass spectra within Compound Discoverer result files
 * [RDKit](https://pypi.org/project/rdkit-pypi/) cheminformatics python package (for implementation of future functionality in cdSirius)
 * [pandas](https://pypi.org/project/pandas/) data science python package
 ## Installation
+Download the source code and unpack it to a location accessible by all users.  Recommended location is 

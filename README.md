@@ -7,8 +7,8 @@ Installation of cdSirius requires a number of dependencies to be installed on th
 * Fully licensed installation of Compound Discoverer v3.3, SP 3
 * [Sirius](https://v6.docs.sirius-ms.io/install/) minimum program version 6.0.1
 * [Python v.3.11](https://www.python.org/downloads/release/python-3110/).  Note that more recent versions of Python may work but have not been tested.  _Note:_ it is recommended to install Python at `C:/Program Files/Python311/python.exe`.
-* [pySirius](https://github.com/sirius-ms/sirius-client-openAPI/tree/master/client-api_python) python package implementing the Sirius REST API for interfacing
-* [pyEDS](https://github.com/thermofisherlsms/pyeds/tree/master) python package for programmatic access to mass spectra within Compound Discoverer result files
+* [PySirius](https://github.com/sirius-ms/sirius-client-openAPI/tree/master/client-api_python) python package implementing the Sirius REST API for interfacing
+* [PyEDS](https://github.com/thermofisherlsms/pyeds/tree/master) python package for programmatic access to mass spectra within Compound Discoverer result files
 * [RDKit](https://pypi.org/project/rdkit-pypi/) cheminformatics python package (for implementation of future functionality in cdSirius)
 * [pandas](https://pypi.org/project/pandas/) data science python package
 ## Sirius user account
@@ -31,4 +31,7 @@ To run Sirius with CSI:FingerID and CANOPUS functionality, you will need a Siriu
    **Figure 2.** Scanning for missing features within the CD license manager dialogue
 
 6.  Close and re-start Compound Discoverer to complete installation and allow new nodes to be registered.
+## Using cdSirius within a Compound Discoverer workflow
+The cdSirius node is a post-processing node that can be appended to an existing full processing node, or it can be included in a "reprocessing" workflow to retrospectively add Sirius results to the cdResult file.  Either way, you will find the new Sirius node within the Workflow Editor Node menu, in the _10. Post-Processing_ sub-menu:
+   <img width="194" alt="image" src="https://github.com/user-attachments/assets/c5a6a15b-ec71-4182-91bf-ca05b04d28fd" />
 

@@ -19,13 +19,12 @@ To run Sirius with CSI:FingerID and CANOPUS functionality, you will need a Siriu
    - `node.json`
    - `IMG_16x16.png`
    - `IMG_32x32.png`
-3. Edit the node.json file you just copied to correct the paths in lines 19, 20, and 30 according to your local installation.
-<div align="center">
+3. Edit the node.json file you just copied to correct the paths in lines 19, 20, and 30 according to your local installation.  <div align="center">
 <img width="500" alt="image" src="https://github.com/user-attachments/assets/9c965c4d-73cd-4ccb-9d09-5d451a725f1f" />
 </div>
-4. Launch Compound Discoverer 3.3 SP3 and navigate to the Help -> License Manager dialogue.  Run "Scan for Missing Features":
-<div align="center">
+4. Launch Compound Discoverer 3.3 SP3 and navigate to the Help -> License Manager dialogue.  Run "Scan for Missing Features":  <div align="center">
 <img width="693" alt="image" src="https://github.com/user-attachments/assets/1b5c8aa4-cf06-4425-9251-429dfb610424" />
 </div>
+
 
 

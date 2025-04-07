@@ -34,13 +34,13 @@ To run Sirius with CSI:FingerID and CANOPUS functionality, you will need a Siriu
 ## Using cdSirius within a Compound Discoverer workflow
 The cdSirius node is a post-processing node that can be appended to an existing full processing node, or it can be included in a "reprocessing" workflow to retrospectively add Sirius results to the cdResult file.  Either way, you will find the new Sirius node within the Workflow Editor Node menu, in the _10. Post-Processing_ sub-menu:
    
-      <img width="194" alt="image" src="https://github.com/user-attachments/assets/c5a6a15b-ec71-4182-91bf-ca05b04d28fd" />
+   <img width="194" alt="image" src="https://github.com/user-attachments/assets/c5a6a15b-ec71-4182-91bf-ca05b04d28fd" />
 
 After adding the node to the workflow, the processing configuration dialogue is available for editing.  Default parameters are provided for most settings:
 
-      <img width="567" alt="image" src="https://github.com/user-attachments/assets/76b6c9a8-f21d-40dd-8cb0-7f5e6265e309" />
+   <img width="567" alt="image" src="https://github.com/user-attachments/assets/76b6c9a8-f21d-40dd-8cb0-7f5e6265e309" />
 
-      **Figure 3.** Sirius node parameter configuration.
+   **Figure 3.** Sirius node parameter configuration.
 
 ### cdSirius parameter settings
 1.  **Sirius Program Settings:**  These are global settings for the Sirius program service.
@@ -54,6 +54,9 @@ After adding the node to the workflow, the processing configuration dialogue is 
    - <ins>Maximum MW</ins>: Sirius computation becomes extremely slow for large molecules, so it is best to limit the upper MW range to only those of interest for a particular analysis.
 3.  **Molecular Formula Prediction Settings:**  This set of parameters controls the "base" molecular formula calculation functions within Sirius and is necessary for all further processing
    - <ins>Predict Formulas</ins>: Must be set to "True" for any processing to occur.  Set to False only for program debugging purposes.
-   - 
+   - <ins>Maximum Formula Candidates</ins>: Adjust to increase or decrease the allowable formula candidates that can be considered by Sirius.
+   - <ins>MS1 Mass Accuracy [ppm]</ins>: The known mass accuracy threshold (in ppm) for your MS1 data.  _This is a critical parameter and must be set accordingly.  If your instrument is equipped with EasyIC, it is suggested that you use it_
+   - <ins>MS2 Mass Accuracy [ppm]</ins>: The known mass accuracy threshold (in ppm) for your MS2 data.  _This is also critical and is often a less accurate measure than for MS1, especially when using lower resolutions (e.g. 15K).  It is not recommended to use EasyIC for Orbitrap MS2 with resolutions < 60K_
+   - <ins>Filter by Isotope Pattern</ins>:
 
 

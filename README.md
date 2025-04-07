@@ -19,5 +19,6 @@ Installation of cdSirius requires a number of dependencies to be installed on th
    - `IMG_32x32.png`
 3. Edit the node.json file you just copied to correct the paths in lines 19, 20, and 30 according to your local installation. 
 <img width="693" alt="image" src="https://github.com/user-attachments/assets/9c965c4d-73cd-4ccb-9d09-5d451a725f1f" />
+
 4. 
 

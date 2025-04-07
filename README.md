@@ -43,6 +43,7 @@ After adding the node to the workflow, the processing configuration dialogue is 
    **Figure 3.** Sirius node parameter configuration.
 
 ### cdSirius parameter settings
+The range of possible settings for Sirius is very large and the corresponding job configurations can become quite complicated.  The settings available within cdSirius represent a subset of possible parameters, chosen based on their general applicability and typical use cases.  A complete guide for Sirius job parameters is beyond the scope of this program, but extensive documentation is available for Sirius [elsewhere](https://v6.docs.sirius-ms.io/methods-background/).
 1.  **Sirius Program Settings:**  These are global settings for the Sirius program service.
    - <ins>Sirius Program Path</ins>: Here you can set the program path for the Sirius executable.  The default should be suitable for most installations, but can be changed for non-standard installations.
    - <ins>Save Sirius Result</ins>: Setting this to `True` will enable the .sirius workspace to be persisted as a permanent file, saved to the same directory with the cdResult file.  This is useful if e.g. you plan to re-open and analyze data using the Sirius GUI at a later time.
@@ -61,6 +62,16 @@ After adding the node to the workflow, the processing configuration dialogue is 
    - <ins>Enforce Lipid Detection Filtering</ins>: This setting enables an internal Sirius algorithm that attempts to detect fragmentation patterns characteristic of lipids.  When detected, the corresponding lipid-like molecular formula will be prioritized as a candidate.
    - <ins>Perform Bottom-Up Formula Search</ins>: This setting allows for the use of a "bottom-up" formula candidate selection strategy, which uses combinations of known formulas for potential sub-fragments to build candidate molecular formulas.  It is less restrictive than searching a database for candidate formulas but is also less computationally-intensive than a true _de novo_ formula prediction strategy.
    - <ins>_De novo_ Formula Generation Threshold</ins>: Below this _m/z_, all molecular formulas are calculated using a _de novo_ approach, which maximizes the chance to observe novel formulas (which are not present in any databases).  Above this _m/z_, formula candidates are predicted using the "bottom-up" strategy if enabled above.
-   - 
+   - <ins>Formula Elemental Constraints</ins>: Use this string to specify which elements should be considered for _de novo_ formula prediction.  Numbers in brackets represent maximum possible element counts.  Elements without numbers are given unlimited maximum counts.  **Note:** Do not include B, Cl, Br, S, or Se in this list, as those elements are detected automatically using observed isotope patterns in the MS1 spectra.
+4.  **Structure Prediction Settings:**  These settings control the CSI:FingerID structure prediction toolset within Sirius.
+   - <ins>Predict Structures</ins>: Toggle enabling CSI:FingerID database search
+   - <ins>PubChem as Fallback</ins>: cdSirius uses the US EPA DSSTox database as its default molecular structure database for searching compound structure candidates.  When this parameter is set to "True", Sirius will search PubChem for structure candidates in the event that no viable structure candidates were found within the target database.  In future releases of cdSirius, database choices beyond DSSTox will be available.
+5.  **Compound Class Prediction Settings:**  This parameter set controls the CANOPUS classification algorithm.
+   - <ins>Predict Compound Classes</ins>: When this parameter is set to "True", the CANOPUS implementation of the ClassyFire algorithm is used to predict compound classes from molecular fingerprints.
+6.  **De Novo Structure Prediction Settings:**  These settings control the MSNovelist toolset for database-independent molecular structure prediction.  **Caution:** MSNovelist is quite computationally intensive.  Be careful when using this toolset with full (unfiltered) compound sets from Compound Discoverer, as the job compute times can become extremely long.
+   - <ins>Predict de Novo Structures</ins>: Enables or disables MSNovelist processing.
+   - <ins>De Novo Structure Candidates Limit</ins>: This setting throttles the number of possible _de Novo_ structure candidates considered for each molecular formula, for each Compound
+7.  **General:**
+   - <ins>Archive Datafiles</ins>: If set to True, the temporary table files and JSON-based response file produced by the cdSirius node for ingestion by Compound Discoverer are persisted in a folder within the same directory as the corresponding cdResult file.
 
 

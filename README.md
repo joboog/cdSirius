@@ -25,7 +25,7 @@ To run Sirius with CSI:FingerID and CANOPUS functionality, you will need a Siriu
 </div>
 4. Launch Compound Discoverer 3.3 SP3 and navigate to the Help -> License Manager dialogue.  From here, press "Scan for Missing Features":
 <div align="center">
-![image](https://github.com/user-attachments/assets/bf236aea-5d1d-468a-be08-9a535cd47986)
+<img width="693" alt="image" src="https://github.com/user-attachments/assets/1b5c8aa4-cf06-4425-9251-429dfb610424" />
 </div>
 
 

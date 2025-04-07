@@ -12,9 +12,10 @@ Installation of cdSirius requires a number of dependencies to be installed on th
 * [RDKit](https://pypi.org/project/rdkit-pypi/) cheminformatics python package (for implementation of future functionality in cdSirius)
 * [pandas](https://pypi.org/project/pandas/) data science python package
 ## Installation
-1. Download the source code and unpack it to a location accessible by all users.  An example might be `C:/Program Files/python/cdSirius`.
+1. Download the source code and unpack it to a location accessible by all users.  An example might be `C:/python/cdSirius`.
 2. Create a new folder at `C:/Program Files/Thermo/Compound Discoverer 3.3/Tools/Scripts/cdSirius` and copy the following files from the source code root directory to the newly created folder.  You will need administrator privileges for this:
    - `node.json`
    - `IMG_16x16.png`
    - `IMG_32x32.png`
 3. Edit the node.json file you just copied to correct the paths in `"ScriptProcessorArguments"` for `"ExecutableCommandLineArguments"` and `"ExecutablePath"` and in 
+<img width="674" alt="image" src="https://github.com/user-attachments/assets/db45bb6c-96a9-40a2-ac88-aeb97f988c5b" />

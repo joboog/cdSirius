@@ -231,7 +231,7 @@ def main():
                    os.path.split(cdResult_path)[0],
                    withIndex=True)
         writeTable(results_dict['SiriusFingerprintDefinitions'],
-                   "FingerprintDefinitionKey",
+                   os.path.splitext(os.path.basename(cdResult_path))[0]+"_FPkey",
                    os.path.split(cdResult_path)[0])
          
     # Export Sirius result data to tables and assemble node_response JSON

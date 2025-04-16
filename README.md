@@ -14,7 +14,9 @@ Installation of cdSirius requires a number of dependencies to be installed on th
 * [PySirius](https://github.com/sirius-ms/sirius-client-openAPI/tree/master/client-api_python) python package implementing the Sirius REST API for interfacing
 * [PyEDS](https://github.com/thermofisherlsms/pyeds/tree/master) python package for programmatic access to mass spectra within Compound Discoverer result files
 * [RDKit](https://pypi.org/project/rdkit-pypi/) cheminformatics python package (for implementation of future functionality in cdSirius)
+* [numpy](https://numpy.org/) mathematics python package
 * [pandas](https://pypi.org/project/pandas/) data science python package
+* [molmass](https://github.com/cgohlke/molmass) python package for molecular formula manipulation
 ## Sirius user account
 To run Sirius with CSI:FingerID and CANOPUS functionality, you will need a Sirius user account.  You can create a user account as described in the [Sirius Wiki](https://v6.docs.sirius-ms.io/account-and-license/).  The username and password will be used in the cdSirius node for authentication.  Do not re-use a sensitive password for this user account, as the password will not be encrypted and will be visible in plain text within the CD method editor. _Note_: If you are an academic user, you will qualify for a free account, but you must use your institutional email address when you register your account.  
 ## Installation
@@ -42,7 +44,7 @@ The cdSirius node is a post-processing node that can be appended to an existing 
 
 After adding the node to the workflow, the processing configuration dialogue is available for editing.  Default parameters are provided for most settings:
 
-   <img width="567" alt="image" src="https://github.com/user-attachments/assets/76b6c9a8-f21d-40dd-8cb0-7f5e6265e309" />
+   ![image](https://github.com/user-attachments/assets/30da7f94-f87f-4e95-aaae-25222286860a)
 
    **Figure 3.** Sirius node parameter configuration.
 
@@ -51,6 +53,7 @@ The range of possible settings for Sirius is very large and the corresponding jo
 1.  **Sirius Program Settings:**  These are global settings for the Sirius program service.
    - <ins>Sirius Program Path</ins>: Here you can set the program path for the Sirius executable.  The default should be suitable for most installations, but can be changed for non-standard installations.
    - <ins>Save Sirius Result</ins>: Setting this to `True` will enable the .sirius workspace to be persisted as a permanent file, saved to the same directory with the cdResult file.  This is useful if e.g. you plan to re-open and analyze data using the Sirius GUI at a later time.
+   - <ins>Save Sirius Predicted Fingerprints</ins>: This setting will toggle saving tab-separated ASCII files (.txt) containing the predicted fingerprints for compounds processed in Sirius as well as the fingerprint definition key used by Sirius.  These files will be saved to the same directory as the cdResult file.
    - <ins>Sirius Username</ins>: Your username as configured on the BrightGiant web portal as described above
    - <ins>Sirius Password</ins>: Your password as configured on the BrightGiant web portal as described above (**Note**: Do not re-use sensitive passwords here as this information is not encrypted or hidden)
 2.  **Compound Selection Settings:**  These settings modify which Compounds within the CD processing environment are selected for submission to Sirius
@@ -58,7 +61,6 @@ The range of possible settings for Sirius is very large and the corresponding jo
    - <ins>Peak Quality Threshold</ins>: This threshold allows a more stringent selection of chromatographic peaks for Sirius processing.  See the CD documentation for an explanation of peak quality metrics.
    - <ins>Maximum MW</ins>: Sirius computation becomes extremely slow for large molecules, so it is best to limit the upper MW range to only those of interest for a particular analysis.
 3.  **Molecular Formula Prediction Settings:**  This set of parameters controls the "base" molecular formula calculation functions within Sirius and is necessary for all further processing
-   - <ins>Predict Formulas</ins>: Must be set to "True" for any processing to occur.  Set to False only for program debugging purposes.
    - <ins>Maximum Formula Candidates</ins>: Adjust to increase or decrease the allowable formula candidates that can be considered by Sirius.
    - <ins>MS1 Mass Accuracy [ppm]</ins>: The known mass accuracy threshold (in ppm) for your MS1 data.  _This is a critical parameter and must be set accordingly.  If your instrument is equipped with EasyIC, it is suggested that you use it_
    - <ins>MS2 Mass Accuracy [ppm]</ins>: The known mass accuracy threshold (in ppm) for your MS2 data.  _This is also critical and is often a less accurate measure than for MS1, especially when using lower resolutions (e.g. 15K).  It is not recommended to use EasyIC for Orbitrap MS2 with resolutions < 60K_

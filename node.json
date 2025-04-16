@@ -16,8 +16,8 @@
 "SupportedStudyTypes": ["General"],
 
 "ScriptProcessorArguments": {
-"ExecutableCommandLineArguments": "C:\\Users\\ferguson-lab\\Documents\\cdSirius\\node\\cdSirius.py %NODEARGS%",
-"ExecutablePath": "C:\\Program Files\\Python311\\python.exe",
+"ExecutableCommandLineArguments": "C:\\pythonScripts\\cdSirius\\node\\cdSirius.py %NODEARGS%",
+"ExecutablePath": "C:\\Python311\\python.exe",
 "ExpectResponse": true,
 "UseRFriendlyNames": true,
 "RequestedTablesAndColumns": "Compounds: Background"
@@ -38,6 +38,14 @@
 "SelectionValues": ["True", "False"],
 "Category": "1. Sirius Program Settings",
 "Description": "Save Sirius project space output for use with Sirius GUI.  If True, project space file is saved in the same directory as the corresponding cdResult file"
+},
+{
+"DataType": "String",
+"Name": "Save Sirius Predicted Fingerprints",
+"Default": "False",
+"SelectionValues": ["True", "False"],
+"Category": "1. Sirius Program Settings",
+"Description": "Save molecular fingerprints predicted by Sirius.  If True, files containing (1) the molecular fingerprint definition key and (2) the table of predicted molecular fingerprints for all compounds processed by Sirius is saved in the same directory as the corresponding cdResult file"
 },
 {
 "DataType": "String",
@@ -76,14 +84,6 @@
 "Maximum": "2000",
 "Category": "2. Compound Selection Settings",
 "Description": "Maximum molecular weight for Sirius processing"
-},
-{
-"DataType": "String",
-"Name": "Predict Formulas",
-"Default": "True",
-"SelectionValues": ["True", "False"],
-"Category": "3. Molecular Formula Prediction Settings",
-"Description": "Toggle prediction of molecular formula by Sirius"
 },
 {
 "DataType": "Int",

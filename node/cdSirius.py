@@ -20,20 +20,19 @@ from submitJob import startSirius,makeProjectSpace,importCDfeatures,configureJob
 import string
 import random
 import time
-
 #from rdkit import Chem
 
 def print_error(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
     
 # Write table to data file
-def writeTable(outTable, outName, outPath):
+def writeTable(outTable, outName, outPath, withIndex = False):
     outFilename = outName+'.txt'
     outFile_path = os.path.join(outPath, outFilename)
     outTable.to_csv(outFile_path, 
                     sep='\t', 
                     encoding='utf-8', 
-                    index=False, 
+                    index=withIndex, 
                     header=True, 
                     quoting=1,
                     na_rep ='')
@@ -78,6 +77,7 @@ def main():
     siriusUser = str(parameters['Sirius Username'])
     siriusPW = str(parameters['Sirius Password'])
     saveSirius = parameters['Save Sirius Result'] == "True"
+    saveFingerprints = parameters['Save Sirius Predicted Fingerprints'] == "True"
 
     # Parse CD result file path, scratch folder path, generate Sirius project space name
     cdResult = cdResult_path
@@ -94,9 +94,8 @@ def main():
     MaxMass = float(parameters['Maximum MW'])
     Limit = 10000 # Arbitrary limit switch for debugging
 
-    # Sirius job parameters
+    # Sirius job parameters    
     # Formula prediction params
-    doSirius = parameters['Predict Formulas'] == "True"
     profile = "ORBITRAP"
     formulaCandidates = int(parameters['Maximum Formula Candidates'])
     MS1accuracy_ppm = float(parameters['MS1 Mass Accuracy [ppm]'])
@@ -110,25 +109,38 @@ def main():
     formulaSearchDBs = None
     timeOuts = {"numberOfSecondsPerDecomposition": 0,
                 "numberOfSecondsPerInstance": 0}
+    
     # CSI-FingerID params
     doCSIFID = parameters['Predict Structures']== "True"
     structureDBs = ['DSSTOX', 'PUBCHEM']
     PubChemFallback = parameters['PubChem as Fallback'] == "True"
+    
     # ClassyFire params
     doClassyFire = parameters['Predict Compound Classes']== "True"
+    
     # msNovelist params
     doMsNovelist = parameters['Predict de Novo Structures']== "True"
-    msNovelistCandidates = int(parameters['De Novo Structure Candidates Limit'])    
-            
+    msNovelistCandidates = int(parameters['De Novo Structure Candidates Limit'])
     
+    # Check for rational Sirius settings
+    if saveFingerprints and not doCSIFID:
+        print_error('WARNING: CSI:FingerID must be enabled for fingerprint prediction.  Predicted fingerprints will not be saved')
+        saveFingerprints = False
+    if doClassyFire and not doCSIFID:
+        print_error('WARNING: CSI:FingerID must be enabled for Compound Class prediction.  No Compound Class predictions will be performed')
+        doClassyFire = False
+    if doMsNovelist and not doCSIFID:
+        print_error('WARNING: CSI:FingerID must be enabled for de Novo Structure prediction.  No de Novo structures will be predicted')
+        doMsNovelist = False
+                   
     # Import Compounds table from CD export   
     try:
-        compoundsImport = pd.read_csv(compounds_path, 
+        compoundsExport = pd.read_csv(compounds_path, 
                                       header=0,
                                       sep = '\t')
 
     except Exception as e:
-        print_error('Could not process data')
+        print_error('Could not process exported CD Compounds table')
         print_error(e)        
         exit(1)
     
@@ -172,7 +184,7 @@ def main():
         
     # Configure job for Sirius processing
     try:
-        jobSub = configureJob(doSirius, profile, formulaCandidates, MS2accuracy_ppm,
+        jobSub = configureJob(profile, formulaCandidates, MS2accuracy_ppm,
                          MS1accuracy_ppm, filterByIsotopes, enforceLipidFormula,
                          performBottomUpSearch, deNovoBelowMz, formulaConstraints,
                          detectableElements, formulaSearchDBs, timeOuts,
@@ -198,7 +210,7 @@ def main():
         
     # Import results from Sirius job completion
     try:
-        results_dict = retrieveSiriusResults(api, ps_info, jobSub)
+        results_dict = retrieveSiriusResults(api, ps_info, jobSub, saveFingerprints)
         print_error("Sirius processing results retrieved successfully")
         time.sleep(10)
          
@@ -211,9 +223,69 @@ def main():
     # Shut down Sirius API
     shutdownSirius()
     time.sleep(10)
+    
+    # Save predicted fingerprints to files if requested
+    if saveFingerprints:
+        writeTable(results_dict['SiriusFingerprints'],
+                   os.path.splitext(os.path.basename(cdResult_path))[0]+"_fingerprints",
+                   os.path.split(cdResult_path)[0],
+                   withIndex=True)
+        writeTable(results_dict['SiriusFingerprintDefinitions'],
+                   os.path.splitext(os.path.basename(cdResult_path))[0]+"_FPkey",
+                   os.path.split(cdResult_path)[0])
          
     # Export Sirius result data to tables and assemble node_response JSON
     response = ScriptingResponse()
+    
+    # Top annotations for Compounds Table
+    topAnnotations = results_dict['SiriusTopAnnotation']
+    compoundsImport = compoundsExport.merge(topAnnotations,
+                                     how = 'left',
+                                     on = 'Compounds ID')
+    writeTable(compoundsImport, "SiriusTopAnnotations", workdir)
+    response.add_table('Compounds', os.path.join(workdir, 'SiriusTopAnnotations.txt'))
+    response.add_column('Compounds', 'Compounds ID', 'Int', 'ID')
+    response.add_column('Compounds', 'Background', 'Boolean')
+    response.add_column('Compounds', 'Sirius Feature Name', 'String')
+    response.set_column_option('Compounds', 'Sirius Feature Name', 'RelativePosition', '101')
+    response.add_column('Compounds', 'Sirius Top Formula', 'String')
+    response.set_column_option('Compounds', 'Sirius Top Formula', 'RelativePosition', '122')
+    response.add_column('Compounds', 'Sirius Top Formula Score', 'Float')
+    response.set_column_option('Compounds', 'Sirius Top Formula Score', 'RelativePosition', '123')
+    response.set_column_option('Compounds', 'Sirius Top Formula Score', 'FormatString', 'F1')
+    response.add_column('Compounds', 'Sirius ΔMass [ppm]', 'Float')
+    response.set_column_option('Compounds', 'Sirius ΔMass [ppm]', 'RelativePosition', '124')
+    response.set_column_option('Compounds', 'Sirius ΔMass [ppm]', 'FormatString', 'F2')
+    response.add_column('Compounds', 'Top CSI:FingerID Name', 'String')
+    response.set_column_option('Compounds', 'Top CSI:FingerID Name', 'RelativePosition', '401')
+    response.add_column('Compounds', 'Top CSI:FingerID InChIKey', 'String')
+    response.set_column_option('Compounds', 'Top CSI:FingerID InChIKey', 'RelativePosition', '402')
+    response.add_column('Compounds', 'Top CSI:FingerID Score', 'Float')
+    response.set_column_option('Compounds', 'Top CSI:FingerID Score', 'RelativePosition', '403')
+    response.set_column_option('Compounds', 'Top CSI:FingerID Score', 'FormatString', 'F1')
+    response.add_column('Compounds', 'Top CSI:FingerID Confid. Exact', 'Float')
+    response.set_column_option('Compounds', 'Top CSI:FingerID Confid. Exact', 'RelativePosition', '404')
+    response.set_column_option('Compounds', 'Top CSI:FingerID Confid. Exact', 'FormatString', 'F2')
+    response.add_column('Compounds', 'Top CSI:FingerID Confid. Approx.', 'Float')
+    response.set_column_option('Compounds', 'Top CSI:FingerID Confid. Approx.', 'RelativePosition', '405')
+    response.set_column_option('Compounds', 'Top CSI:FingerID Confid. Approx.', 'FormatString', 'F2')
+    response.add_column('Compounds', 'Top CSI:FingerID Tanimoto Sim.', 'Float')
+    response.set_column_option('Compounds', 'Top CSI:FingerID Tanimoto Sim.', 'RelativePosition', '406')
+    response.set_column_option('Compounds', 'Top CSI:FingerID Tanimoto Sim.', 'FormatString', 'F2')
+    response.add_column('Compounds', 'Top ClassyFire Kingdom', 'String')
+    response.set_column_option('Compounds', 'Top ClassyFire Kingdom', 'RelativePosition', '1091')
+    response.add_column('Compounds', 'Top ClassyFire Superclass', 'String')
+    response.set_column_option('Compounds', 'Top ClassyFire Superclass', 'RelativePosition', '1092')
+    response.add_column('Compounds', 'Top ClassyFire Class', 'String')
+    response.set_column_option('Compounds', 'Top ClassyFire Class', 'RelativePosition', '1093')
+    response.add_column('Compounds', 'Top ClassyFire Subclass', 'String')
+    response.set_column_option('Compounds', 'Top ClassyFire Subclass', 'RelativePosition', '1094')
+    response.add_column('Compounds', 'Top ClassyFire Level 5', 'String')
+    response.set_column_option('Compounds', 'Top ClassyFire Level 5', 'RelativePosition', '1095')
+    response.add_column('Compounds', 'Top ClassyFire Level 6', 'String')
+    response.set_column_option('Compounds', 'Top ClassyFire Level 6', 'RelativePosition', '1096')
+    
+    
     # Formula table
     formulas = results_dict['SiriusFormulas']
     writeTable(formulas.drop(['Compounds ID'], axis = 1), 
@@ -224,9 +296,12 @@ def main():
     response.set_column_option('SiriusFormulas', 'Formula', 'RelativePosition', '10')
     response.add_column('SiriusFormulas', 'Adduct', 'String')
     response.set_column_option('SiriusFormulas', 'Adduct', 'RelativePosition', '20')
-    response.add_column('SiriusFormulas', 'ΔMass [ppm]', 'Float')
-    response.set_column_option('SiriusFormulas', 'ΔMass [ppm]', 'RelativePosition', '21')
-    response.set_column_option('SiriusFormulas', 'ΔMass [ppm]', 'FormatString', 'F2')
+    response.add_column('SiriusFormulas', 'MS1 ΔMass [ppm]', 'Float')
+    response.set_column_option('SiriusFormulas', 'MS1 ΔMass [ppm]', 'RelativePosition', '21')
+    response.set_column_option('SiriusFormulas', 'MS1 ΔMass [ppm]', 'FormatString', 'F2')
+    response.add_column('SiriusFormulas', 'Median MS2 ΔMass [ppm]', 'Float')
+    response.set_column_option('SiriusFormulas', 'Median MS2 ΔMass [ppm]', 'RelativePosition', '22')
+    response.set_column_option('SiriusFormulas', 'Median MS2 ΔMass [ppm]', 'FormatString', 'F2')
     response.add_column('SiriusFormulas', 'Rank', 'Int')
     response.set_column_option('SiriusFormulas', 'Rank', 'RelativePosition', '30')
     response.add_column('SiriusFormulas', 'Sirius Score', 'Float')
@@ -277,6 +352,9 @@ def main():
         response.set_column_option('SiriusStructures', 'Log Kow', 'FormatString', 'F1')
         response.add_column('SiriusStructures', 'Adduct', 'String')
         response.set_column_option('SiriusStructures', 'Adduct', 'RelativePosition', '40')
+        response.add_column('SiriusStructures', 'ΔMass [ppm]', 'Float')
+        response.set_column_option('SiriusStructures', 'ΔMass [ppm]', 'RelativePosition', '45')
+        response.set_column_option('SiriusStructures', 'ΔMass [ppm]', 'FormatString', 'F2')
         response.add_column('SiriusStructures', 'Rank', 'Int')
         response.set_column_option('SiriusStructures', 'Rank', 'RelativePosition', '50')
         response.add_column('SiriusStructures', 'CSI Score', 'Float')
@@ -313,8 +391,7 @@ def main():
         response.set_table_option('SiriusStructures-SiriusFormulas', 'SecondTable', 'SiriusFormulas')
         response.add_column('SiriusStructures-SiriusFormulas', 'SiriusStructures ID', 'Int', 'ID')
         response.add_column('SiriusStructures-SiriusFormulas', 'SiriusFormulas ID', 'Int', 'ID')
-        
-        
+                
     if doClassyFire:
         # Classes table
         classes = results_dict['SiriusClasses']
@@ -380,6 +457,9 @@ def main():
         response.set_column_option('SiriusDeNovoStructures', 'Log Kow', 'FormatString', 'F1')
         response.add_column('SiriusDeNovoStructures', 'Adduct', 'String')
         response.set_column_option('SiriusDeNovoStructures', 'Adduct', 'RelativePosition', '40')
+        response.add_column('SiriusDeNovoStructures', 'ΔMass [ppm]', 'Float')
+        response.set_column_option('SiriusDeNovoStructures', 'MS1 ΔMass [ppm]', 'RelativePosition', '41')
+        response.set_column_option('SiriusDeNovoStructures', 'MS1 ΔMass [ppm]', 'FormatString', 'F2')
         response.add_column('SiriusDeNovoStructures', 'Rank', 'Int')
         response.set_column_option('SiriusDeNovoStructures', 'Rank', 'RelativePosition', '50')
         response.add_column('SiriusDeNovoStructures', 'CSI Score', 'Float')

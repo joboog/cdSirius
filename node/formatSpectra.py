@@ -27,7 +27,7 @@ def makeFeatures(cdResult, CheckedOnly, MinPeakRating, MaxMass, Limit):
                    "MassSpectrumInfoItem": "MassAnalyzer IN (2, 7)",}
        
         # count records
-        counts = eds.Count("Compounds", query=queries["Compounds"])
+        #counts = eds.Count("Compounds", query=queries["Compounds"])
        
         # read compound data from DB
         compounds = eds.ReadHierarchy(
@@ -74,7 +74,7 @@ def makeFeatures(cdResult, CheckedOnly, MinPeakRating, MaxMass, Limit):
             # assemble Sirius input format dict
             siriusInput ={}
             #print(f"\n {cmpd.ID} {cmpd.MolecularWeight:.5f}@{cmpd.RetentionTime:.3f} {cmpd.Formula} {cmpd.Name}")
-            siriusInput['name'] = f"{cmpd.MolecularWeight:.4f}@{cmpd.RetentionTime:.2f}"
+            siriusInput['name'] = f"{cmpd.MolecularWeight:.5f}@{cmpd.RetentionTime:.2f}"
             siriusInput['externalFeatureId'] = str(cmpd.ID)
             siriusInput['ionMass'] = ionMass
             siriusInput['charge'] = [bh.Charge for bh in cmpd.Children 

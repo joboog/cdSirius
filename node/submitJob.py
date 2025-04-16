@@ -19,6 +19,7 @@ import os
 from io import StringIO
 import time
 import pandas as pd
+import numpy as np
 from formatSpectra import makeFeatures
 from molmass import Formula
 
@@ -39,7 +40,7 @@ def expandFormula(formula):
 # Calculate mass accuracy from a formula and measured mass
 def ppmAccuracy(molForm, measuredMass):
     theoreticalMass = Formula(molForm).monoisotopic_mass
-    ppm = (theoreticalMass-float(measuredMass))/theoreticalMass*1e6
+    ppm = (float(measuredMass)-theoreticalMass)/theoreticalMass*1e6
     return(ppm)
 
 # Start a local Sirius instance and connect to it
@@ -212,17 +213,17 @@ def retrieveSiriusResults(api, ps_info, jobSub, saveFingerprints):
             topAnnotation['Top ClassyFire Kingdom'] = ""
             topAnnotation['Top ClassyFire Superclass'] = ""
             topAnnotation['Top ClassyFire Class'] = ""
-            topAnnotation['Top ClassFire Subclass'] = ""
-            topAnnotation['Top ClassFire Level 5'] = ""
-            topAnnotation['Top ClassFire Level 6'] = ""
+            topAnnotation['Top ClassyFire Subclass'] = ""
+            topAnnotation['Top ClassyFire Level 5'] = ""
+            topAnnotation['Top ClassyFire Level 6'] = ""
         else: 
             cfLineage = len(feature.top_annotations.compound_class_annotation.classy_fire_lineage)
             topAnnotation['Top ClassyFire Kingdom'] = feature.top_annotations.compound_class_annotation.classy_fire_lineage[0].name if cfLineage > 0 else ""
             topAnnotation['Top ClassyFire Superclass'] = feature.top_annotations.compound_class_annotation.classy_fire_lineage[1].name if cfLineage > 1 else ""
             topAnnotation['Top ClassyFire Class'] = feature.top_annotations.compound_class_annotation.classy_fire_lineage[2].name if cfLineage > 2 else ""
-            topAnnotation['Top ClassFire Subclass'] = feature.top_annotations.compound_class_annotation.classy_fire_lineage[3].name if cfLineage > 3 else ""
-            topAnnotation['Top ClassFire Level 5'] = feature.top_annotations.compound_class_annotation.classy_fire_lineage[4].name if cfLineage > 4 else ""
-            topAnnotation['Top ClassFire Level 6'] = feature.top_annotations.compound_class_annotation.classy_fire_lineage[5].name if cfLineage > 5 else ""
+            topAnnotation['Top ClassyFire Subclass'] = feature.top_annotations.compound_class_annotation.classy_fire_lineage[3].name if cfLineage > 3 else ""
+            topAnnotation['Top ClassyFire Level 5'] = feature.top_annotations.compound_class_annotation.classy_fire_lineage[4].name if cfLineage > 4 else ""
+            topAnnotation['Top ClassyFire Level 6'] = feature.top_annotations.compound_class_annotation.classy_fire_lineage[5].name if cfLineage > 5 else ""
 
         
         # Retrieve the formula predictions with classes & fingerprints
@@ -418,6 +419,7 @@ def retrieveSiriusResults(api, ps_info, jobSub, saveFingerprints):
                                                                    errors = 'coerce')
     siriusTopAnnotations['Top CSI:FingerID Confid. Approx.'] = pd.to_numeric(siriusTopAnnotations['Top CSI:FingerID Confid. Approx.'],
                                                                    errors = 'coerce')
+    siriusTopAnnotations.replace([np.inf, -np.inf], np.nan, inplace=True)
     
     
     # Get top annotation fingerprint vectors if requested

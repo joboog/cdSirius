@@ -44,7 +44,7 @@ The cdSirius node is a post-processing node that can be appended to an existing 
 
 After adding the node to the workflow, the processing configuration dialogue is available for editing.  Default parameters are provided for most settings:
 
-   <img width="567" alt="image" src="https://github.com/user-attachments/assets/76b6c9a8-f21d-40dd-8cb0-7f5e6265e309" />
+   ![image](https://github.com/user-attachments/assets/30da7f94-f87f-4e95-aaae-25222286860a)
 
    **Figure 3.** Sirius node parameter configuration.
 

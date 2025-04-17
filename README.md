@@ -14,7 +14,6 @@ Installation of cdSirius requires a number of dependencies to be installed on th
 * [PySirius](https://github.com/sirius-ms/sirius-client-openAPI/tree/master/client-api_python) python package implementing the Sirius REST API for interfacing
 * [PyEDS](https://github.com/thermofisherlsms/pyeds/tree/master) python package for programmatic access to mass spectra within Compound Discoverer result files
 * [RDKit](https://pypi.org/project/rdkit-pypi/) cheminformatics python package (for implementation of future functionality in cdSirius)
-* [numpy](https://numpy.org/) mathematics python package
 * [pandas](https://pypi.org/project/pandas/) data science python package
 * [molmass](https://github.com/cgohlke/molmass) python package for molecular formula manipulation
 ## Sirius user account

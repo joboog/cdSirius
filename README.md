@@ -19,23 +19,55 @@ Installation of cdSirius requires a number of dependencies to be installed on th
 ## Sirius user account
 To run Sirius with CSI:FingerID and CANOPUS functionality, you will need a Sirius user account.  You can create a user account as described in the [Sirius Wiki](https://v6.docs.sirius-ms.io/account-and-license/).  The username and password will be used in the cdSirius node for authentication.  Do not re-use a sensitive password for this user account, as the password will not be encrypted and will be visible in plain text within the CD method editor. _Note_: If you are an academic user, you will qualify for a free account, but you must use your institutional email address when you register your account.  
 ## Installation
-1. After dependencies above are fulfilled, download the source code and unpack it to a location accessible by all users.  An example might be `C:/python/cdSirius`.
-2. Create a new folder at `C:/Program Files/Thermo/Compound Discoverer 3.3/Tools/Scripts/cdSirius` and copy the following files from the source code root directory to the newly created folder.  You will need administrator privileges for this:
-   - `node.json`
-   - `IMG_16x16.png`
-   - `IMG_32x32.png`
-3. Edit the node.json file you just copied to correct the paths in lines 19, 20, and 30 according to your local installation.
 
-   <img width="500" alt="image" src="https://github.com/user-attachments/assets/9c965c4d-73cd-4ccb-9d09-5d451a725f1f" />
+cdSirius is available on PyPI and can be installed using pip. This method makes it easier to manage dependencies and updates.
 
-   **Figure 1.** node.json file section with paths to relevant locations
-5. Launch Compound Discoverer 3.3 SP3 and navigate to the Help -> License Manager dialogue.  Run "Scan for Missing Features":
+1. Ensure you have Python 3.11 installed. Recommended path is `C:/Program Files/Python311/python.exe`
 
-   <img width="693" alt="image" src="https://github.com/user-attachments/assets/1b5c8aa4-cf06-4425-9251-429dfb610424" />
+2. Install the package from PyPI:
+   ```
+   pip install cdsirius
+   ```
 
-   **Figure 2.** Scanning for missing features within the CD license manager dialogue
+   This will install cdSirius and all required dependencies:
+   - pandas
+   - pyeds
+   - pysirius (≥ version 6.0.1)
+   - rdkit-pypi
 
-6.  Close and re-start Compound Discoverer to complete installation and allow new nodes to be registered.
+3. Set up Compound Discoverer integration using the included CLI tool:
+   ```
+   cdsirius-setup "C:\Program Files\Thermo\Compound Discoverer 3.3"
+   ```
+   
+   This tool will:
+   - Create the necessary directory structure in your Compound Discoverer installation
+   - Copy required files to the Compound Discoverer Scripts folder
+   - Update paths in node.json to point to your Python installation
+   - Create a bootstrap script to connect Compound Discoverer to the installed package
+
+   The path to your Compound Discoverer installation is required. You can also specify:
+   - The Python executable path:
+     ```
+     cdsirius-setup "C:\Program Files\Thermo\Compound Discoverer 3.3" --python-path "C:\path\to\python.exe"
+     ```
+   
+   - The Sirius executable path:
+     ```
+     cdsirius-setup "C:\Program Files\Thermo\Compound Discoverer 3.3" --sirius-path "C:\Program Files\sirius\sirius.exe"
+     ```
+   
+   - Both paths:
+     ```
+     cdsirius-setup "C:\Program Files\Thermo\Compound Discoverer 3.3" --python-path "C:\path\to\python.exe" --sirius-path "C:\Program Files\sirius\sirius.exe"
+     ```
+
+4. Complete the installation:
+   - Launch Compound Discoverer 3.3 SP3
+   - Navigate to Help -> License Manager
+   - Run "Scan for Missing Features"
+   - Restart Compound Discoverer
+
 ## Using cdSirius within a Compound Discoverer workflow
 The cdSirius node is a post-processing node that can be appended to an existing full processing workflow, or it can be included in a "reprocessing" workflow to retrospectively add Sirius results to the cdResult file.  Either way, you will find the new Sirius node within the Workflow Editor Node menu, in the _10. Post-Processing_ sub-menu:
    

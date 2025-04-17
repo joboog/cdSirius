@@ -28,6 +28,7 @@ dependencies = [
     "pyeds",
     "pysirius>=6.0.1",
     "rdkit-pypi",
+    "molmass"
 ]
 
 [project.urls]

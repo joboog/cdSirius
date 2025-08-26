@@ -6,6 +6,7 @@ Implementation of Sirius within Compound Discoverer uses the scripting node func
 When using cdSirius results in a publication, please be sure to cite the work that enabled creation of this resource.  Visit the Sirius development group's site referenced above for detailed citation information, and use the primary citation as follows:
 
 Kai Dührkop, Markus Fleischauer, Marcus Ludwig, Alexander A. Aksenov, Alexey V. Melnik, Marvin Meusel, Pieter C. Dorrestein, Juho Rousu and Sebastian Böcker. [SIRIUS 4: Turning tandem mass spectra into metabolite structure information](https://doi.org/10.1038/s41592-019-0344-8). _Nature Methods_ 16, 299–302, 2019.
+
 ## Dependencies
 Installation of cdSirius requires a number of dependencies to be installed on the host PC.  _Important_: It is recommended to install all of these dependencies as administrator so that all users will have access.  This is particularly important for the python packages.  Also, the packages should be installed in the base python environment.
 * Fully licensed installation of Compound Discoverer v3.3 (SP 3) or v3.3
@@ -13,22 +14,36 @@ Installation of cdSirius requires a number of dependencies to be installed on th
 * [Python v.3.11](https://www.python.org/downloads/release/python-3110/).  Note that more recent versions of Python may work but have not been tested.  _Note:_ it is recommended to install Python at `C:/Program Files/Python311/python.exe`.
 * [PySirius](https://github.com/sirius-ms/sirius-client-openAPI/tree/master/client-api_python) python package implementing the Sirius REST API for interfacing
 * [PyEDS](https://github.com/thermofisherlsms/pyeds/tree/master) python package for programmatic access to mass spectra within Compound Discoverer result files
-* [RDKit](https://pypi.org/project/rdkit-pypi/) cheminformatics python package (for implementation of future functionality in cdSirius)
-* [pandas](https://pypi.org/project/pandas/) data science python package
-* [molmass](https://github.com/cgohlke/molmass) python package for molecular formula manipulation
-## Sirius user account
+
+
+### Installing PyEDS and PySirius from GitHub
+Open a PowerShell prompt with administrator privileges
+Make sure you have `git` installed and available in your system PATH.
+To install the required `pyEDS` and `pySirius` packages directly from their GitHub repositories, use the following commands in your command prompt:
+
+   ```PowerShell
+   pip install git+https://github.com/thermofisherlsms/pyeds.git
+   pip install git+https://github.com/sirius-ms/sirius-client-openAPI#subdirectory=client-api_python/generated
+   ```
+
+### Sirius user account
 To run Sirius with CSI:FingerID and CANOPUS functionality, you will need a Sirius user account.  You can create a user account as described in the [Sirius Wiki](https://v6.docs.sirius-ms.io/account-and-license/).  The username and password will be used in the cdSirius node for authentication.  Do not re-use a sensitive password for this user account, as the password will not be encrypted and will be visible in plain text within the CD method editor. _Note_: If you are an academic user, you will qualify for a free account, but you must use your institutional email address when you register your account.  
-## Installation
-1. After dependencies above are fulfilled, download the source code and unpack it to a location accessible by all users.  An example might be `C:/python/cdSirius`.
-2. Create a new folder at `C:/Program Files/Thermo/Compound Discoverer 3.3/Tools/Scripts/cdSirius` and copy the following files from the source code root directory to the newly created folder.  You will need administrator privileges for this:
-   - `node.json`
-   - `IMG_16x16.png`
-   - `IMG_32x32.png`
-3. Edit the node.json file you just copied to correct the paths in lines 19, 20, and 30 according to your local installation.
 
-   <img width="500" alt="image" src="https://github.com/user-attachments/assets/9c965c4d-73cd-4ccb-9d09-5d451a725f1f" />
+## Installation of cdSirius
+1. Ensure all dependencies listed above are installed.
+2. Open a PowerShell prompt with administrator privileges.
+3. Install the cdSirius package directly from PyPI using pip:
 
-   **Figure 1.** node.json file section with paths to relevant locations
+   ```PowerShell
+   pip install cdSirius
+   ```
+
+4. After installation, verify that the `cdSirius` package is available in your Python environment:
+
+   ```PowerShell
+   python -m cdSirius --help
+   ```
+
 5. Launch Compound Discoverer 3.3 or 3.4 and navigate to the Help -> License Manager dialogue.  Run "Scan for Missing Features":
 
    <img width="693" alt="image" src="https://github.com/user-attachments/assets/1b5c8aa4-cf06-4425-9251-429dfb610424" />
@@ -36,6 +51,7 @@ To run Sirius with CSI:FingerID and CANOPUS functionality, you will need a Siriu
    **Figure 2.** Scanning for missing features within the CD license manager dialogue
 
 6.  Close and re-start Compound Discoverer to complete installation and allow new nodes to be registered.
+
 ## Using cdSirius within a Compound Discoverer workflow
 The cdSirius node is a post-processing node that can be appended to an existing full processing workflow, or it can be included in a "reprocessing" workflow to retrospectively add Sirius results to the cdResult file.  Either way, you will find the new Sirius node within the Workflow Editor Node menu, in the _10. Post-Processing_ sub-menu:
    
